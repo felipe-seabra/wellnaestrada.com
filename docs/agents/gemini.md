@@ -10,7 +10,7 @@
 - **Frontend:** Next.js 15 (App Router), React 19, Tailwind CSS 4.
 - **Backend:** PostgreSQL (Generic migrations, Supabase compatible, SSR integration).
 - **Core Libraries:** Framer Motion (Premium motion & Viewport tracking), React Hook Form + Zod (Funnel validation), ReactPlayer (Stable YouTube-first video engine).
-- **Architecture:** Next.js Server Actions for lead creation and analytics. Context API for multi-step form state. Dynamic loading for third-party scripts/players to prevent hydration mismatches. Anonymous-safe tracking flow (bypassing malformed JWTs). Viewport-aware autoplay (mutado) for VSL with cinematic preview.
+- **Architecture:** Next.js Server Actions for lead creation and analytics. Context API for multi-step form state. Dynamic loading for third-party scripts/players to prevent hydration mismatches. Anonymous-safe tracking flow (bypassing malformed JWTs). Viewport-aware autoplay (mutado) for VSL with debounced (400ms) cinematic stabilization to prevent playback interruptions (AbortError).
 - **Infrastructure:** Dockerized local environment with PostgreSQL 15, PostgREST API, and Adminer.
 
 ## 3. UX & Conversion Strategy (VSL Funnel)

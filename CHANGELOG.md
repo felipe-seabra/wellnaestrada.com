@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **Video Playback Stability (Cinematic Engine)**:
+  - Resolved `AbortError` in video playback by implementing debounced visibility logic and play/pause guards.
+  - Fixed React 19 "Unknown event handler property" warnings by refining `ReactPlayer` props.
+  - Stabilized viewport-triggered autoplay with a 400ms stabilization delay to prevent rapid toggling.
+  - Optimized YouTube configuration with `origin` and lazy loading for better performance and compliance.
+  - Improved cinematic transition stability between poster and video layers.
 - **Analytics & Auth Architecture**:
   - Isolated public analytics tracking from authenticated sessions to prevent `JWSError (CompactDecodeError)`.
   - Implemented `createClient({ anonymous: true })` to bypass malformed JWT cookies in public flows.

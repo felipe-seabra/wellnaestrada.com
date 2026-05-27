@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef, useMemo } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { Play, Volume2, VolumeX, Loader2 } from 'lucide-react'
@@ -8,12 +8,12 @@ import { useVideoTracking } from '@/hooks/use-video-tracking'
 import { cn } from '@/lib/utils'
 
 // Dynamic import to avoid SSR issues and optimize bundle
-const DynamicReactPlayer = dynamic<any>(
+const ReactPlayer = dynamic<any>(
   () => import('react-player').then((mod) => mod.default),
   {
     ssr: false,
     loading: () => (
-      <div className="absolute inset-0 bg-zinc-900 animate-pulse" />
+      <div className="absolute inset-0 bg-zinc-900 animate-pulse rounded-2xl" />
     ),
   },
 )
@@ -32,10 +32,21 @@ export function VSLPlayer({
   className,
 }: VSLPlayerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(containerRef, {
-    amount: 0.5, // 50% of the video must be visible to trigger
+  const playerRef = useRef<any>(null)
+  const visibilityTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Use a stable in-view state with threshold
+  const isCurrentlyInView = useInView(containerRef, {
+    amount: 0.6, // Slightly more than 50% for stability
     once: false,
   })
+
+  const [stableInView, setStableInView] = useState(false)
+  const [isMuted, setIsMuted] = useState(true)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [isReady, setIsReady] = useState(false)
+  const [hasInteracted, setHasInteracted] = useState(false)
+  const [isBuffering, setIsBuffering] = useState(false)
 
   const {
     isUnlocked,
@@ -50,28 +61,41 @@ export function VSLPlayer({
     unlockThreshold: 15,
   })
 
-  const [isMuted, setIsMuted] = useState(true)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [isReady, setIsReady] = useState(false)
-  const [hasInteracted, setHasInteracted] = useState(false)
-  const [isBuffering, setIsBuffering] = useState(false)
-
-  // Track impression when component mounts and is in view
+  // Debounce visibility to prevent rapid play/pause
   useEffect(() => {
-    if (isInView) {
+    if (visibilityTimeoutRef.current) {
+      clearTimeout(visibilityTimeoutRef.current)
+    }
+
+    visibilityTimeoutRef.current = setTimeout(() => {
+      setStableInView(isCurrentlyInView)
+    }, 400) // 400ms delay to ensure the user actually stopped here
+
+    return () => {
+      if (visibilityTimeoutRef.current) {
+        clearTimeout(visibilityTimeoutRef.current)
+      }
+    }
+  }, [isCurrentlyInView])
+
+  // Track impression when component enters viewport stably
+  useEffect(() => {
+    if (stableInView) {
       handleImpression()
     }
-  }, [isInView, handleImpression])
+  }, [stableInView, handleImpression])
 
-  // Autoplay logic when entering viewport
+  // Stable Autoplay logic
   useEffect(() => {
-    if (isInView && !isPlaying && !hasInteracted) {
-      setIsPlaying(true)
-    } else if (!isInView && isPlaying && !hasInteracted) {
-      // Optionally pause when leaving viewport if user hasn't interacted
-      setIsPlaying(false)
+    // Only auto-control playback if user hasn't manually interacted yet
+    if (!hasInteracted) {
+      if (stableInView && !isPlaying) {
+        setIsPlaying(true)
+      } else if (!stableInView && isPlaying) {
+        setIsPlaying(false)
+      }
     }
-  }, [isInView, isPlaying, hasInteracted])
+  }, [stableInView, isPlaying, hasInteracted])
 
   useEffect(() => {
     if (isUnlocked && onUnlock) {
@@ -79,17 +103,17 @@ export function VSLPlayer({
     }
   }, [isUnlocked, onUnlock])
 
-  const handleTogglePlay = () => {
+  const handleTogglePlay = useCallback(() => {
     setHasInteracted(true)
-    setIsPlaying(!isPlaying)
-    if (isMuted) setIsMuted(false) // Unmute on interaction
-  }
+    setIsPlaying((prev) => !prev)
+    if (isMuted) setIsMuted(false)
+  }, [isMuted])
 
-  const toggleMute = (e: React.MouseEvent) => {
+  const toggleMute = useCallback((e: React.MouseEvent) => {
     e.stopPropagation()
     setHasInteracted(true)
-    setIsMuted(!isMuted)
-  }
+    setIsMuted((prev) => !prev)
+  }, [])
 
   // Cinematic overlay variants
   const overlayVariants = {
@@ -113,12 +137,13 @@ export function VSLPlayer({
       <AnimatePresence mode="wait">
         {(!isPlaying || !isReady) && (
           <motion.div
+            key="poster"
             variants={overlayVariants}
             initial="initial"
             exit="exit"
             className="absolute inset-0 z-20 flex flex-col items-center justify-center overflow-hidden"
           >
-            {/* Background Image with Parallax-like feel */}
+            {/* Background Image */}
             <motion.img
               src={thumbnailUrl}
               alt="Video Thumbnail"
@@ -127,7 +152,7 @@ export function VSLPlayer({
               animate={{ scale: 1 }}
             />
 
-            {/* Gradient Overlays for Depth */}
+            {/* Gradient Overlays */}
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-zinc-950/40" />
             <div className="absolute inset-0 bg-zinc-950/20 backdrop-blur-[2px]" />
 
@@ -172,7 +197,8 @@ export function VSLPlayer({
           isReady ? 'opacity-100' : 'opacity-0',
         )}
       >
-        <DynamicReactPlayer
+        <ReactPlayer
+          ref={playerRef}
           url={videoUrl}
           width="100%"
           height="100%"
@@ -189,7 +215,10 @@ export function VSLPlayer({
             setIsPlaying(true)
             handlePlay()
           }}
-          onPause={() => setIsPlaying(false)}
+          onPause={() => {
+            // Only update state if it wasn't a system-triggered pause from viewport
+            if (hasInteracted) setIsPlaying(false)
+          }}
           onProgress={(state: { playedSeconds: number }) =>
             handleProgress(state.playedSeconds)
           }
@@ -203,6 +232,8 @@ export function VSLPlayer({
                 controls: 0,
                 iv_load_policy: 3,
                 disablekb: 1,
+                origin:
+                  typeof window !== 'undefined' ? window.location.origin : '',
               },
             },
           }}
@@ -215,6 +246,7 @@ export function VSLPlayer({
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="absolute inset-0 z-30 pointer-events-none"
           >
             {/* Subtle Vignette */}
