@@ -10,7 +10,7 @@
 - **Frontend:** Next.js 15 (App Router), React 19, Tailwind CSS 4.
 - **Backend:** PostgreSQL (Generic migrations, Supabase compatible, SSR integration).
 - **Core Libraries:** Framer Motion (Premium motion), React Hook Form + Zod (Funnel validation), ReactPlayer (Stable video engine).
-- **Architecture:** Next.js Server Actions for lead creation and analytics. Context API for multi-step form state. Dynamic loading for third-party scripts/players to prevent hydration mismatches.
+- **Architecture:** Next.js Server Actions for lead creation and analytics. Context API for multi-step form state. Dynamic loading for third-party scripts/players to prevent hydration mismatches. Anonymous-safe tracking flow (bypassing malformed JWTs).
 - **Infrastructure:** Dockerized local environment with PostgreSQL 15, PostgREST API, and Adminer.
 
 ## 3. UX & Conversion Strategy (VSL Funnel)

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **Analytics & Auth Architecture**:
+  - Isolated public analytics tracking from authenticated sessions to prevent `JWSError (CompactDecodeError)`.
+  - Implemented `createClient({ anonymous: true })` to bypass malformed JWT cookies in public flows.
+  - Added RLS policies to allow anonymous inserts for `leads` and `analytics_events`.
+  - Ensured tracking resilience: failures no longer block UI or funnel progression.
 - **Video Player Architecture**:
   - Replaced native HTML5 `<video>` element with `react-player` for better stability and YouTube support.
   - Fixed `NotSupportedError` by implementing robust source handling.

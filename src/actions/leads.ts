@@ -16,7 +16,8 @@ export type LeadInput = {
 }
 
 export async function createLead(input: LeadInput) {
-  const supabase = await createClient()
+  // Use anonymous client for public lead creation to avoid JWT errors
+  const supabase = await createClient({ anonymous: true })
 
   const { data, error } = await supabase
     .from('leads')
@@ -57,7 +58,8 @@ export type AnalyticsEventInput = {
 
 export async function trackEvent(input: AnalyticsEventInput) {
   try {
-    const supabase = await createClient()
+    // Use anonymous client for public analytics to avoid JWT issues
+    const supabase = await createClient({ anonymous: true })
 
     const { error } = await supabase.from('analytics_events').insert([
       {
