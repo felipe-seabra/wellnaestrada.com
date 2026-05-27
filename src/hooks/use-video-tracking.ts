@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { trackEvent } from '@/actions/leads'
 
 interface UseVideoTrackingProps {
@@ -22,37 +22,33 @@ export function useVideoTracking({
   const [hasStarted, setHasStarted] = useState(false)
   const [hasTracked15s, setHasTracked15s] = useState(false)
 
-  useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
-
-    const handlePlay = () => {
-      if (!hasStarted) {
-        trackEvent({
-          event_name: 'video_start',
-          payload: { video_id: videoId },
-          funnel_id: funnelId,
-          variant_id: variantId,
-        })
-        setHasStarted(true)
-      }
+  const handlePlay = useCallback(() => {
+    if (!hasStarted) {
+      trackEvent({
+        event_name: 'video_start',
+        payload: { video_id: videoId },
+        funnel_id: funnelId,
+        variant_id: variantId,
+      })
+      setHasStarted(true)
     }
+  }, [hasStarted, videoId, funnelId, variantId])
 
-    const handleTimeUpdate = () => {
-      const time = video.currentTime
-      setCurrentTime(time)
+  const handleProgress = useCallback(
+    (seconds: number) => {
+      setCurrentTime(seconds)
 
-      if (time >= unlockThreshold && !isUnlocked) {
+      if (seconds >= unlockThreshold && !isUnlocked) {
         setIsUnlocked(true)
         trackEvent({
           event_name: 'cta_unlock',
-          payload: { video_id: videoId, time_reached: time },
+          payload: { video_id: videoId, time_reached: seconds },
           funnel_id: funnelId,
           variant_id: variantId,
         })
       }
 
-      if (time >= 15 && !hasTracked15s) {
+      if (seconds >= 15 && !hasTracked15s) {
         setHasTracked15s(true)
         trackEvent({
           event_name: 'video_15s',
@@ -61,21 +57,32 @@ export function useVideoTracking({
           variant_id: variantId,
         })
       }
-    }
+    },
+    [unlockThreshold, isUnlocked, hasTracked15s, videoId, funnelId, variantId]
+  )
 
-    video.addEventListener('play', handlePlay)
-    video.addEventListener('timeupdate', handleTimeUpdate)
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    const onPlay = () => handlePlay()
+    const onTimeUpdate = () => handleProgress(video.currentTime)
+
+    video.addEventListener('play', onPlay)
+    video.addEventListener('timeupdate', onTimeUpdate)
 
     return () => {
-      video.removeEventListener('play', handlePlay)
-      video.removeEventListener('timeupdate', handleTimeUpdate)
+      video.removeEventListener('play', onPlay)
+      video.removeEventListener('timeupdate', onTimeUpdate)
     }
-  }, [videoId, unlockThreshold, isUnlocked, hasStarted, hasTracked15s, funnelId, variantId])
+  }, [handlePlay, handleProgress])
 
   return {
     videoRef,
     isUnlocked,
     currentTime,
     progress: (currentTime / unlockThreshold) * 100,
+    handlePlay,
+    handleProgress,
   }
 }

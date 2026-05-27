@@ -1,6 +1,8 @@
 import { Check, Star, Users, ShieldCheck, Plane } from 'lucide-react'
+import Image from 'next/image'
 
 import { Hero } from '@/components/features/marketing/hero'
+import { LifestyleSection } from '@/components/features/marketing/lifestyle-section'
 import { MaxWidthWrapper } from '@/components/layout/max-width-wrapper'
 
 export default function Home() {
@@ -41,10 +43,14 @@ export default function Home() {
         <MaxWidthWrapper>
           <div className="flex flex-col md:flex-row items-center gap-16">
             <div className="flex-1 relative">
-              <div className="aspect-[4/5] rounded-2xl bg-zinc-200 overflow-hidden shadow-2xl rotate-2">
-                <div className="absolute inset-0 bg-zinc-300 flex items-center justify-center text-zinc-500 italic">
-                  [Foto do Well na Irlanda - Lifestyle/Premium]
-                </div>
+              <div className="aspect-[4/5] rounded-2xl bg-zinc-200 overflow-hidden shadow-2xl rotate-2 relative">
+                <Image
+                  src="/images/well.jpg"
+                  alt="Well na Estrada na Irlanda"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
               </div>
               <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-emerald-600 rounded-2xl -rotate-3 -z-10 flex items-end p-4">
                 <p className="text-white font-serif text-2xl italic leading-tight">
@@ -88,6 +94,9 @@ export default function Home() {
           </div>
         </MaxWidthWrapper>
       </section>
+
+      {/* Lifestyle Cinematic Section */}
+      <LifestyleSection />
 
       {/* Why Ireland Section */}
       <section className="py-24 bg-zinc-900 text-white">

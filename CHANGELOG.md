@@ -6,7 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
+### Fixed
+- **Video Player Architecture**:
+  - Replaced native HTML5 `<video>` element with `react-player` for better stability and YouTube support.
+  - Fixed `NotSupportedError` by implementing robust source handling.
+  - Refactored `useVideoTracking` hook to be player-agnostic.
+  - Implemented dynamic loading for video player to optimize performance and prevent hydration issues.
+
+
 ### Added
+- **Visuals & Lifestyle**:
+  - Implemented immersive `LifestyleSection` with cinematic overlays and motion design.
+  - Integrated high-quality creator imagery (`well.jpg`) across the landing page.
+  - Optimized all marketing images using `next/image` for better LCP and performance.
 - **VSL Funnel & Architecture**:
   - Implemented cinematic VSL video player with 15-second unlock mechanism.
   - Created premium "Typeform-like" multi-step onboarding funnel using Framer Motion and React Hook Form.

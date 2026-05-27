@@ -56,13 +56,13 @@ export const HeroContent = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-zinc-900 dark:text-white leading-[1.1]"
+          className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-zinc-900 leading-[1.1] text-balance"
         >
           O mapa estratégico para o seu{' '}
           <span className="relative inline-block">
-            <span className="relative z-10 text-emerald-600 dark:text-emerald-400">intercâmbio premium</span>
-            <svg className="absolute -bottom-2 left-0 w-full h-3 text-emerald-500/20 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
-              <path d="M0 5 Q 25 0 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="8" />
+            <span className="relative z-10 text-emerald-600">intercâmbio premium</span>
+            <svg className="absolute -bottom-2 left-0 w-full h-3 text-emerald-500/30 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
+              <path d="M0 5 Q 25 0 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="2" />
             </svg>
           </span>
         </motion.h1>
@@ -71,7 +71,7 @@ export const HeroContent = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-6 text-zinc-600 dark:text-zinc-400 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed"
+          className="mt-6 text-zinc-600 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed text-balance"
         >
           Assista ao vídeo abaixo para liberar seu planejamento personalizado e descobrir como transformar o sonho da Irlanda em realidade.
         </motion.p>

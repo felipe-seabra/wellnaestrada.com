@@ -56,24 +56,29 @@ export type AnalyticsEventInput = {
 }
 
 export async function trackEvent(input: AnalyticsEventInput) {
-  const supabase = await createClient()
+  try {
+    const supabase = await createClient()
 
-  const { error } = await supabase.from('analytics_events').insert([
-    {
-      event_name: input.event_name,
-      url: input.url,
-      payload: input.payload || {},
-      lead_id: input.lead_id,
-      session_id: input.session_id,
-      funnel_id: input.funnel_id,
-      variant_id: input.variant_id,
-    },
-  ])
+    const { error } = await supabase.from('analytics_events').insert([
+      {
+        event_name: input.event_name,
+        url: input.url,
+        payload: input.payload || {},
+        lead_id: input.lead_id,
+        session_id: input.session_id,
+        funnel_id: input.funnel_id,
+        variant_id: input.variant_id,
+      },
+    ])
 
-  if (error) {
-    console.error('Error tracking event:', error)
-    return { success: false, error: error.message }
+    if (error) {
+      console.error('Error tracking event:', error)
+      return { success: false, error: error.message }
+    }
+
+    return { success: true }
+  } catch (err) {
+    console.error('Fatal error in trackEvent:', err)
+    return { success: false, error: 'Internal server error' }
   }
-
-  return { success: true }
 }

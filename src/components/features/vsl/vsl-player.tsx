@@ -1,10 +1,18 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Play, Volume2, VolumeX } from 'lucide-react'
 import { useVideoTracking } from '@/hooks/use-video-tracking'
 import { cn } from '@/lib/utils'
+
+// Dynamic import to avoid SSR issues and optimize bundle
+// Using any for the component type to avoid complex ReactPlayer type conflicts with next/dynamic
+const DynamicReactPlayer = dynamic<any>(() => import('react-player').then((mod) => mod.default), { 
+  ssr: false,
+  loading: () => <div className="absolute inset-0 bg-zinc-900 animate-pulse" />
+})
 
 interface VSLPlayerProps {
   videoUrl: string
@@ -19,13 +27,13 @@ export function VSLPlayer({
   onUnlock,
   className,
 }: VSLPlayerProps) {
-  const { videoRef, isUnlocked, progress } = useVideoTracking({
+  const { isUnlocked, progress, currentTime, handlePlay, handleProgress } = useVideoTracking({
     videoId: 'main-vsl',
     unlockThreshold: 15,
   })
   const [isMuted, setIsMuted] = useState(true)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [hasInteracted, setHasInteracted] = useState(false)
+  const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
     if (isUnlocked && onUnlock) {
@@ -34,36 +42,25 @@ export function VSLPlayer({
   }, [isUnlocked, onUnlock])
 
   const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause()
-      } else {
-        videoRef.current.play()
-      }
-      setIsPlaying(!isPlaying)
-      setHasInteracted(true)
-    }
+    setIsPlaying(!isPlaying)
   }
 
   const toggleMute = (e: React.MouseEvent) => {
     e.stopPropagation()
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted
-      setIsMuted(!isMuted)
-    }
+    setIsMuted(!isMuted)
   }
 
   return (
     <div
       className={cn(
-        'relative w-full aspect-video rounded-2xl overflow-hidden bg-zinc-900 shadow-2xl ring-1 ring-white/10 group',
+        'relative w-full aspect-video rounded-2xl overflow-hidden bg-zinc-900 shadow-2xl ring-1 ring-white/10 group cursor-pointer',
         className
       )}
       onClick={togglePlay}
     >
-      {/* Thumbnail / Poster */}
+      {/* Thumbnail / Poster Layer */}
       <AnimatePresence>
-        {!isPlaying && (
+        {(!isPlaying || !isReady) && (
           <motion.div
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -86,7 +83,7 @@ export function VSLPlayer({
               </motion.div>
             </div>
             
-            <div className="absolute bottom-6 left-6 right-6 flex flex-col items-center">
+            <div className="absolute bottom-6 left-6 right-6 flex flex-col items-center text-center">
               <p className="text-white/80 text-sm font-medium tracking-wide uppercase">
                 Toque para ver o planejamento personalizado
               </p>
@@ -95,20 +92,38 @@ export function VSLPlayer({
         )}
       </AnimatePresence>
 
-      {/* Video Element */}
-      <video
-        ref={videoRef}
-        src={videoUrl}
-        poster={thumbnailUrl}
-        className="w-full h-full object-cover"
-        playsInline
-        muted={isMuted}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-      />
+      {/* Video Player Wrapper */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none">
+        <DynamicReactPlayer
+          url={videoUrl}
+          width="100%"
+          height="100%"
+          playing={isPlaying}
+          muted={isMuted}
+          playsinline
+          onReady={() => setIsReady(true)}
+          onPlay={() => {
+            setIsPlaying(true)
+            handlePlay()
+          }}
+          onPause={() => setIsPlaying(false)}
+          onProgress={(state: { playedSeconds: number }) => handleProgress(state.playedSeconds)}
+          config={{
+            file: {
+              attributes: {
+                poster: thumbnailUrl,
+                style: { objectFit: 'cover', width: '100%', height: '100%' },
+              },
+            },
+            youtube: {
+              playerVars: { showinfo: 0, rel: 0, modestbranding: 1 },
+            },
+          }}
+        />
+      </div>
 
       {/* Controls Overlay */}
-      {isPlaying && (
+      {isPlaying && isReady && (
         <div className="absolute inset-0 z-20 pointer-events-none">
           {/* Top Controls */}
           <div className="absolute top-4 right-4 pointer-events-auto">
@@ -133,7 +148,7 @@ export function VSLPlayer({
           {!isUnlocked && (
             <div className="absolute bottom-4 left-0 right-0 flex justify-center">
               <span className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-[10px] text-white/90 border border-white/10 uppercase tracking-widest font-bold">
-                Liberando botão em {Math.max(0, 15 - Math.floor(videoRef.current?.currentTime || 0))}s
+                Liberando botão em {Math.max(0, 15 - Math.floor(currentTime))}s
               </span>
             </div>
           )}
