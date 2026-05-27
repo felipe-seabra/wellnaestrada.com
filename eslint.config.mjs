@@ -1,19 +1,7 @@
-import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  resolvePluginsRelativeTo: __dirname,
-  recommendedConfig: js.configs.recommended,
-})
 
 const eslintConfig = [
-  ...compat.extends('@rocketseat/eslint-config/next'),
+  js.configs.recommended,
   {
     plugins: {
       'import-helpers': (await import('eslint-plugin-import-helpers')).default,
@@ -27,8 +15,6 @@ const eslintConfig = [
           alphabetize: { order: 'asc', ignoreCase: true },
         },
       ],
-      '@typescript-eslint/no-unused-vars': 'error',
-      '@typescript-eslint/no-explicit-any': 'error',
       'no-console': ['warn', { allow: ['warn', 'error', 'info', 'debug'] }],
       camelcase: 'off',
     },
@@ -40,6 +26,7 @@ const eslintConfig = [
       'build/**',
       'out/**',
       'next-env.d.ts',
+      'commitlint.config.js',
     ],
   },
 ]

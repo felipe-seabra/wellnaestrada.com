@@ -20,6 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ### Added
+- **VSL Architecture (Production Grade)**:
+  - Implemented viewport-aware autoplay using Intersection Observer (Framer Motion `useInView`).
+  - Added premium cinematic preview state with parallax effects and blurred overlays.
+  - Migrated to a stable YouTube-first implementation using `react-player`.
+  - Enhanced video tracking with impression, start, 15s completion, and full completion events.
+  - Implemented buffering states and smooth transitions for a high-end feel.
 - **Visuals & Lifestyle**:
   - Implemented immersive `LifestyleSection` with cinematic overlays and motion design.
   - Integrated high-quality creator imagery (`well.jpg`) across the landing page.

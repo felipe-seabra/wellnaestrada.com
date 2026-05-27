@@ -23,11 +23,6 @@ export const HeroContent = () => {
         sessionId = crypto.randomUUID()
         localStorage.setItem('funnel_session_id', sessionId)
       }
-      
-      trackEvent({
-        event_name: 'video_impression',
-        session_id: sessionId,
-      })
     }
   }, [])
 
@@ -60,9 +55,20 @@ export const HeroContent = () => {
         >
           O mapa estratégico para o seu{' '}
           <span className="relative inline-block">
-            <span className="relative z-10 text-emerald-600">intercâmbio premium</span>
-            <svg className="absolute -bottom-2 left-0 w-full h-3 text-emerald-500/30 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
-              <path d="M0 5 Q 25 0 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="2" />
+            <span className="relative z-10 text-emerald-600">
+              intercâmbio premium
+            </span>
+            <svg
+              className="absolute -bottom-2 left-0 w-full h-3 text-emerald-500/30 -z-10"
+              viewBox="0 0 100 10"
+              preserveAspectRatio="none"
+            >
+              <path
+                d="M0 5 Q 25 0 50 5 T 100 5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              />
             </svg>
           </span>
         </motion.h1>
@@ -73,7 +79,8 @@ export const HeroContent = () => {
           transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="mt-6 text-zinc-600 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed text-balance"
         >
-          Assista ao vídeo abaixo para liberar seu planejamento personalizado e descobrir como transformar o sonho da Irlanda em realidade.
+          Assista ao vídeo abaixo para liberar seu planejamento personalizado e
+          descobrir como transformar o sonho da Irlanda em realidade.
         </motion.p>
       </div>
 
@@ -85,7 +92,7 @@ export const HeroContent = () => {
         className="mt-12 w-full max-w-5xl px-4"
       >
         <VSLPlayer
-          videoUrl="https://utfs.io/f/placeholder-vsl.mp4" // Placeholder
+          videoUrl="https://www.youtube.com/watch?v=dQw4w9WgXcQ" // Placeholder YouTube URL
           thumbnailUrl="https://images.unsplash.com/photo-1590059132718-5683086ee099?auto=format&fit=crop&q=80"
           onUnlock={() => setIsUnlocked(true)}
         />
@@ -129,7 +136,8 @@ export const HeroContent = () => {
                   setIsModalOpen(true)
                   trackEvent({
                     event_name: 'form_open',
-                    session_id: localStorage.getItem('funnel_session_id') || undefined,
+                    session_id:
+                      localStorage.getItem('funnel_session_id') || undefined,
                   })
                 }}
               >
@@ -157,4 +165,3 @@ export const Hero = () => {
     </FunnelProvider>
   )
 }
-

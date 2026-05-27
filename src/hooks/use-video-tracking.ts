@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { trackEvent } from '@/actions/leads'
 
 interface UseVideoTrackingProps {
@@ -16,11 +16,24 @@ export function useVideoTracking({
   funnelId,
   variantId,
 }: UseVideoTrackingProps) {
-  const videoRef = useRef<HTMLVideoElement>(null)
   const [isUnlocked, setIsUnlocked] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [hasStarted, setHasStarted] = useState(false)
   const [hasTracked15s, setHasTracked15s] = useState(false)
+  const [hasTrackedImpression, setHasTrackedImpression] = useState(false)
+  const [hasTrackedCompletion, setHasTrackedCompletion] = useState(false)
+
+  const handleImpression = useCallback(() => {
+    if (!hasTrackedImpression) {
+      trackEvent({
+        event_name: 'video_impression',
+        payload: { video_id: videoId },
+        funnel_id: funnelId,
+        variant_id: variantId,
+      })
+      setHasTrackedImpression(true)
+    }
+  }, [hasTrackedImpression, videoId, funnelId, variantId])
 
   const handlePlay = useCallback(() => {
     if (!hasStarted) {
@@ -58,31 +71,28 @@ export function useVideoTracking({
         })
       }
     },
-    [unlockThreshold, isUnlocked, hasTracked15s, videoId, funnelId, variantId]
+    [unlockThreshold, isUnlocked, hasTracked15s, videoId, funnelId, variantId],
   )
 
-  useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
-
-    const onPlay = () => handlePlay()
-    const onTimeUpdate = () => handleProgress(video.currentTime)
-
-    video.addEventListener('play', onPlay)
-    video.addEventListener('timeupdate', onTimeUpdate)
-
-    return () => {
-      video.removeEventListener('play', onPlay)
-      video.removeEventListener('timeupdate', onTimeUpdate)
+  const handleEnded = useCallback(() => {
+    if (!hasTrackedCompletion) {
+      trackEvent({
+        event_name: 'video_complete',
+        payload: { video_id: videoId },
+        funnel_id: funnelId,
+        variant_id: variantId,
+      })
+      setHasTrackedCompletion(true)
     }
-  }, [handlePlay, handleProgress])
+  }, [hasTrackedCompletion, videoId, funnelId, variantId])
 
   return {
-    videoRef,
     isUnlocked,
     currentTime,
     progress: (currentTime / unlockThreshold) * 100,
+    handleImpression,
     handlePlay,
     handleProgress,
+    handleEnded,
   }
 }

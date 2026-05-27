@@ -1,18 +1,22 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef, useMemo } from 'react'
 import dynamic from 'next/dynamic'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Play, Volume2, VolumeX } from 'lucide-react'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
+import { Play, Volume2, VolumeX, Loader2 } from 'lucide-react'
 import { useVideoTracking } from '@/hooks/use-video-tracking'
 import { cn } from '@/lib/utils'
 
 // Dynamic import to avoid SSR issues and optimize bundle
-// Using any for the component type to avoid complex ReactPlayer type conflicts with next/dynamic
-const DynamicReactPlayer = dynamic<any>(() => import('react-player').then((mod) => mod.default), { 
-  ssr: false,
-  loading: () => <div className="absolute inset-0 bg-zinc-900 animate-pulse" />
-})
+const DynamicReactPlayer = dynamic<any>(
+  () => import('react-player').then((mod) => mod.default),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="absolute inset-0 bg-zinc-900 animate-pulse" />
+    ),
+  },
+)
 
 interface VSLPlayerProps {
   videoUrl: string
@@ -27,13 +31,47 @@ export function VSLPlayer({
   onUnlock,
   className,
 }: VSLPlayerProps) {
-  const { isUnlocked, progress, currentTime, handlePlay, handleProgress } = useVideoTracking({
+  const containerRef = useRef<HTMLDivElement>(null)
+  const isInView = useInView(containerRef, {
+    amount: 0.5, // 50% of the video must be visible to trigger
+    once: false,
+  })
+
+  const {
+    isUnlocked,
+    progress,
+    currentTime,
+    handleImpression,
+    handlePlay,
+    handleProgress,
+    handleEnded,
+  } = useVideoTracking({
     videoId: 'main-vsl',
     unlockThreshold: 15,
   })
+
   const [isMuted, setIsMuted] = useState(true)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isReady, setIsReady] = useState(false)
+  const [hasInteracted, setHasInteracted] = useState(false)
+  const [isBuffering, setIsBuffering] = useState(false)
+
+  // Track impression when component mounts and is in view
+  useEffect(() => {
+    if (isInView) {
+      handleImpression()
+    }
+  }, [isInView, handleImpression])
+
+  // Autoplay logic when entering viewport
+  useEffect(() => {
+    if (isInView && !isPlaying && !hasInteracted) {
+      setIsPlaying(true)
+    } else if (!isInView && isPlaying && !hasInteracted) {
+      // Optionally pause when leaving viewport if user hasn't interacted
+      setIsPlaying(false)
+    }
+  }, [isInView, isPlaying, hasInteracted])
 
   useEffect(() => {
     if (isUnlocked && onUnlock) {
@@ -41,59 +79,99 @@ export function VSLPlayer({
     }
   }, [isUnlocked, onUnlock])
 
-  const togglePlay = () => {
+  const handleTogglePlay = () => {
+    setHasInteracted(true)
     setIsPlaying(!isPlaying)
+    if (isMuted) setIsMuted(false) // Unmute on interaction
   }
 
   const toggleMute = (e: React.MouseEvent) => {
     e.stopPropagation()
+    setHasInteracted(true)
     setIsMuted(!isMuted)
   }
 
+  // Cinematic overlay variants
+  const overlayVariants = {
+    initial: { opacity: 1 },
+    exit: {
+      opacity: 0,
+      transition: { duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] },
+    },
+  } as const
+
   return (
     <div
+      ref={containerRef}
       className={cn(
-        'relative w-full aspect-video rounded-2xl overflow-hidden bg-zinc-900 shadow-2xl ring-1 ring-white/10 group cursor-pointer',
-        className
+        'relative w-full aspect-video rounded-2xl overflow-hidden bg-zinc-950 shadow-2xl ring-1 ring-white/10 group cursor-pointer group/player',
+        className,
       )}
-      onClick={togglePlay}
+      onClick={handleTogglePlay}
     >
-      {/* Thumbnail / Poster Layer */}
-      <AnimatePresence>
+      {/* Cinematic Preview / Poster Layer */}
+      <AnimatePresence mode="wait">
         {(!isPlaying || !isReady) && (
           <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 z-10"
+            variants={overlayVariants}
+            initial="initial"
+            exit="exit"
+            className="absolute inset-0 z-20 flex flex-col items-center justify-center overflow-hidden"
           >
-            <img
+            {/* Background Image with Parallax-like feel */}
+            <motion.img
               src={thumbnailUrl}
               alt="Video Thumbnail"
-              className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
+              className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-[2000ms]"
+              initial={{ scale: 1.1 }}
+              animate={{ scale: 1 }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent" />
-            
-            <div className="absolute inset-0 flex items-center justify-center">
+
+            {/* Gradient Overlays for Depth */}
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-zinc-950/40" />
+            <div className="absolute inset-0 bg-zinc-950/20 backdrop-blur-[2px]" />
+
+            {/* Play Button Interface */}
+            <div className="relative z-30 flex flex-col items-center gap-6">
               <motion.div
-                whileHover={{ scale: 1.1 }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="w-20 h-20 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-2xl"
+                className="w-24 h-24 rounded-full bg-white/5 backdrop-blur-xl flex items-center justify-center border border-white/20 shadow-[0_0_50px_rgba(255,255,255,0.1)] group-hover:border-white/40 transition-colors"
               >
-                <Play className="w-8 h-8 text-white fill-white ml-1" />
+                {isBuffering ? (
+                  <Loader2 className="w-10 h-10 text-white animate-spin" />
+                ) : (
+                  <Play className="w-10 h-10 text-white fill-white ml-1" />
+                )}
               </motion.div>
+
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-white/40 text-[10px] uppercase tracking-[0.3em] font-bold">
+                  Aperte para ouvir
+                </span>
+                <h3 className="text-white text-xl md:text-2xl font-light tracking-tight text-center px-6">
+                  Descubra o caminho{' '}
+                  <span className="text-emerald-400 font-medium italic">
+                    Premium
+                  </span>{' '}
+                  para o seu intercâmbio
+                </h3>
+              </div>
             </div>
-            
-            <div className="absolute bottom-6 left-6 right-6 flex flex-col items-center text-center">
-              <p className="text-white/80 text-sm font-medium tracking-wide uppercase">
-                Toque para ver o planejamento personalizado
-              </p>
-            </div>
+
+            {/* Bottom Accent */}
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Video Player Wrapper */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none">
+      <div
+        className={cn(
+          'absolute inset-0 w-full h-full transition-opacity duration-1000',
+          isReady ? 'opacity-100' : 'opacity-0',
+        )}
+      >
         <DynamicReactPlayer
           url={videoUrl}
           width="100%"
@@ -101,59 +179,120 @@ export function VSLPlayer({
           playing={isPlaying}
           muted={isMuted}
           playsinline
-          onReady={() => setIsReady(true)}
+          onReady={() => {
+            setIsReady(true)
+            setIsBuffering(false)
+          }}
+          onBuffer={() => setIsBuffering(true)}
+          onBufferEnd={() => setIsBuffering(false)}
           onPlay={() => {
             setIsPlaying(true)
             handlePlay()
           }}
           onPause={() => setIsPlaying(false)}
-          onProgress={(state: { playedSeconds: number }) => handleProgress(state.playedSeconds)}
+          onProgress={(state: { playedSeconds: number }) =>
+            handleProgress(state.playedSeconds)
+          }
+          onEnded={handleEnded}
           config={{
-            file: {
-              attributes: {
-                poster: thumbnailUrl,
-                style: { objectFit: 'cover', width: '100%', height: '100%' },
-              },
-            },
             youtube: {
-              playerVars: { showinfo: 0, rel: 0, modestbranding: 1 },
+              playerVars: {
+                showinfo: 0,
+                rel: 0,
+                modestbranding: 1,
+                controls: 0,
+                iv_load_policy: 3,
+                disablekb: 1,
+              },
             },
           }}
         />
       </div>
 
       {/* Controls Overlay */}
-      {isPlaying && isReady && (
-        <div className="absolute inset-0 z-20 pointer-events-none">
-          {/* Top Controls */}
-          <div className="absolute top-4 right-4 pointer-events-auto">
-            <button
-              onClick={toggleMute}
-              className="p-2 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 text-white hover:bg-black/60 transition-colors"
-            >
-              {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-            </button>
-          </div>
+      <AnimatePresence>
+        {isPlaying && isReady && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="absolute inset-0 z-30 pointer-events-none"
+          >
+            {/* Subtle Vignette */}
+            <div className="absolute inset-0 bg-radial-gradient from-transparent to-black/20 pointer-events-none" />
 
-          {/* Bottom Progress Bar (Unlock) */}
-          <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-white/10">
-            <motion.div
-              className="h-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"
-              initial={{ width: 0 }}
-              animate={{ width: `${Math.min(progress, 100)}%` }}
-              transition={{ ease: 'linear' }}
-            />
-          </div>
-          
-          {!isUnlocked && (
-            <div className="absolute bottom-4 left-0 right-0 flex justify-center">
-              <span className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-[10px] text-white/90 border border-white/10 uppercase tracking-widest font-bold">
-                Liberando botão em {Math.max(0, 15 - Math.floor(currentTime))}s
-              </span>
+            {/* Top Controls */}
+            <div className="absolute top-6 right-6 pointer-events-auto">
+              <button
+                onClick={toggleMute}
+                className="group/btn relative p-3 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-white hover:bg-black/60 hover:border-white/20 transition-all duration-300 overflow-hidden"
+              >
+                <div className="relative z-10">
+                  {isMuted ? (
+                    <VolumeX className="w-5 h-5" />
+                  ) : (
+                    <Volume2 className="w-5 h-5" />
+                  )}
+                </div>
+                {isMuted && (
+                  <motion.div
+                    layoutId="mute-pulse"
+                    className="absolute inset-0 bg-white/10"
+                    animate={{ opacity: [0.1, 0.3, 0.1] }}
+                    transition={{ repeat: Infinity, duration: 2 }}
+                  />
+                )}
+              </button>
             </div>
-          )}
-        </div>
-      )}
+
+            {/* Bottom Progress Layer */}
+            <div className="absolute bottom-0 left-0 right-0 flex flex-col pointer-events-auto">
+              {/* Progress Bar (Unlock) */}
+              <div className="h-1 bg-white/10 w-full overflow-hidden">
+                <motion.div
+                  className="h-full bg-emerald-500"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${Math.min(progress, 100)}%` }}
+                  transition={{ ease: 'linear', duration: 0.5 }}
+                  style={{ boxShadow: '0 0 15px rgba(16,185,129,0.8)' }}
+                />
+              </div>
+
+              <div className="bg-gradient-to-t from-zinc-950/80 to-transparent py-8 px-8 flex justify-between items-center">
+                {!isUnlocked ? (
+                  <motion.div
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    className="flex items-center gap-3"
+                  >
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-[10px] text-white/70 uppercase tracking-[0.2em] font-bold">
+                      Liberando recompensa em{' '}
+                      {Math.max(0, 15 - Math.floor(currentTime))}s
+                    </span>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="flex items-center gap-2"
+                  >
+                    <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <span className="text-[10px] text-emerald-400 uppercase tracking-[0.2em] font-bold">
+                      Acesso Liberado
+                    </span>
+                  </motion.div>
+                )}
+
+                <div className="flex items-center gap-4 opacity-0 group-hover/player:opacity-100 transition-opacity duration-300">
+                  <span className="text-[10px] text-white/40 uppercase tracking-widest">
+                    Well na Estrada VSL
+                  </span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
