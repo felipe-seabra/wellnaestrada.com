@@ -40,7 +40,7 @@
     "@commitlint/cli": "^21.0.1",
     "@commitlint/config-conventional": "^21.0.1",
     "@eslint/eslintrc": "^3.3.5",
-    "@rocketseat/eslint-config": "^2.2.2",
+    "@rocketseat/eslint-config": "^3.0.12",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -52,6 +52,7 @@
     "eslint-plugin-prettier": "^5.5.5",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.5",
+    "postcss": "^8.5.15",
     "prettier": "^3.8.3",
     "tailwindcss": "^4",
     "typescript": "^5"
