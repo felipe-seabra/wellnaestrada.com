@@ -93,7 +93,6 @@ export const HeroContent = () => {
       >
         <VSLPlayer
           videoUrl="https://www.youtube.com/watch?v=dQw4w9WgXcQ" // Placeholder YouTube URL
-          thumbnailUrl="https://images.unsplash.com/photo-1590059132718-5683086ee099?auto=format&fit=crop&q=80"
           onUnlock={() => setIsUnlocked(true)}
         />
       </motion.div>

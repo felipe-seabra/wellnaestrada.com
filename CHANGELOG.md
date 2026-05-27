@@ -6,13 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
+### Changed
+- **Simplified Video Player Architecture**:
+  - Removed overengineered cinematic stabilization and complex viewport state logic.
+  - Stabilized YouTube autoplay with audio enabled when entering the viewport.
+  - Eliminated unsupported event handlers (`onBuffer`, `onBufferEnd`) causing React warnings.
+  - Simplified `VSLPlayer` component for better maintainability and stable playback.
+  - Optimized `ReactPlayer` implementation using standard props and stable `useInView` threshold.
+
 ### Fixed
-- **Video Playback Stability (Cinematic Engine)**:
-  - Resolved `AbortError` in video playback by implementing debounced visibility logic and play/pause guards.
-  - Fixed React 19 "Unknown event handler property" warnings by refining `ReactPlayer` props.
-  - Stabilized viewport-triggered autoplay with a 400ms stabilization delay to prevent rapid toggling.
-  - Optimized YouTube configuration with `origin` and lazy loading for better performance and compliance.
-  - Improved cinematic transition stability between poster and video layers.
+- **Video Playback Stability**:
+  - Resolved `AbortError` and playback race conditions by simplifying the play/pause lifecycle.
+  - Fixed "Unknown event handler property" warnings in the player.
+
 - **Analytics & Auth Architecture**:
   - Isolated public analytics tracking from authenticated sessions to prevent `JWSError (CompactDecodeError)`.
   - Implemented `createClient({ anonymous: true })` to bypass malformed JWT cookies in public flows.
