@@ -10,6 +10,7 @@ import { Button } from '../../ui/button'
 import { FunnelProvider } from '../funnel/funnel-context'
 import { FunnelModal } from '../funnel/funnel-modal'
 import { trackEvent } from '@/actions/leads'
+import { VSL_CONFIG } from '@/lib/constants/video'
 
 export const HeroContent = () => {
   const [isUnlocked, setIsUnlocked] = useState(false)
@@ -92,7 +93,7 @@ export const HeroContent = () => {
         className="mt-12 w-full max-w-5xl px-4"
       >
         <VSLPlayer
-          videoUrl="https://www.youtube.com/watch?v=dQw4w9WgXcQ" // Placeholder YouTube URL
+          videoUrl={VSL_CONFIG.youtubeUrl}
           onUnlock={() => setIsUnlocked(true)}
         />
       </motion.div>

@@ -22,6 +22,8 @@ interface VSLPlayerProps {
   className?: string
 }
 
+import { VSL_CONFIG } from '@/lib/constants/video'
+
 export function VSLPlayer({ videoUrl, onUnlock, className }: VSLPlayerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -36,8 +38,8 @@ export function VSLPlayer({ videoUrl, onUnlock, className }: VSLPlayerProps) {
     handleProgress,
     handleEnded,
   } = useVideoTracking({
-    videoId: 'main-vsl',
-    unlockThreshold: 15,
+    videoId: VSL_CONFIG.videoId,
+    unlockThreshold: VSL_CONFIG.unlockSeconds,
   })
 
   // Notify parent when unlocked
