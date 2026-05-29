@@ -7,12 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- **Centralized VSL Configuration**:
+  - Created `src/lib/constants/video.ts` as the single source of truth for VSL parameters.
+  - Refactored `Hero`, `VSLPlayer`, and tracking logic to consume centralized constants.
+  - Updated VSL video to the official consultancy version (`MBGdI_eRwIA`).
 - **Browser-Compliant Video Autoplay**:
   - Implemented `muted={true}` by default for viewport-triggered autoplay to comply with browser policies.
   - Added a clear "Clique para ativar o áudio" overlay that unlocks sound and shows player controls.
   - Ensured stable playback across all modern browsers without `NotAllowedError`.
 
 ### Fixed
+- **Root Cause of JWT Errors**:
+  - Completely eradicated `JWSError (CompactDecodeError)` by disabling session persistence and auto-detection in both browser and server Supabase clients for public flows.
+  - Ensured no cookie parsing or JWT validation occurs on the landing page, guaranteeing 100% stability for anonymous users.
 - **Persistent JWT Errors**:
   - Resolved `JWSError (CompactDecodeError)` by bypassing `@supabase/ssr` for anonymous server actions.
   - Implemented `createAnonymousClient` using base `supabase-js` with session persistence disabled.
