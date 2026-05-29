@@ -1,8 +1,27 @@
 import { createServerClient } from '@supabase/ssr'
+import { createClient as createBaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
+export async function createAnonymousClient() {
+  return createBaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+      },
+    },
+  )
+}
+
 export async function createClient(options?: { anonymous?: boolean }) {
-  const cookieStore = options?.anonymous ? null : await cookies()
+  if (options?.anonymous) {
+    return createAnonymousClient()
+  }
+
+  const cookieStore = await cookies()
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -10,7 +29,6 @@ export async function createClient(options?: { anonymous?: boolean }) {
     {
       cookies: {
         getAll() {
-          if (!cookieStore) return []
           try {
             return cookieStore.getAll()
           } catch (error) {
@@ -19,7 +37,6 @@ export async function createClient(options?: { anonymous?: boolean }) {
           }
         },
         setAll(cookiesToSet) {
-          if (!cookieStore) return
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options),

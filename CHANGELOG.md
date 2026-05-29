@@ -7,23 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- **Simplified Video Player Architecture**:
-  - Removed overengineered cinematic stabilization and complex viewport state logic.
-  - Stabilized YouTube autoplay with audio enabled when entering the viewport.
-  - Eliminated unsupported event handlers (`onBuffer`, `onBufferEnd`) causing React warnings.
-  - Simplified `VSLPlayer` component for better maintainability and stable playback.
-  - Optimized `ReactPlayer` implementation using standard props and stable `useInView` threshold.
+- **Browser-Compliant Video Autoplay**:
+  - Implemented `muted={true}` by default for viewport-triggered autoplay to comply with browser policies.
+  - Added a clear "Clique para ativar o áudio" overlay that unlocks sound and shows player controls.
+  - Ensured stable playback across all modern browsers without `NotAllowedError`.
 
 ### Fixed
-- **Video Playback Stability**:
-  - Resolved `AbortError` and playback race conditions by simplifying the play/pause lifecycle.
-  - Fixed "Unknown event handler property" warnings in the player.
-
-- **Analytics & Auth Architecture**:
-  - Isolated public analytics tracking from authenticated sessions to prevent `JWSError (CompactDecodeError)`.
-  - Implemented `createClient({ anonymous: true })` to bypass malformed JWT cookies in public flows.
-  - Added RLS policies to allow anonymous inserts for `leads` and `analytics_events`.
-  - Ensured tracking resilience: failures no longer block UI or funnel progression.
+- **Persistent JWT Errors**:
+  - Resolved `JWSError (CompactDecodeError)` by bypassing `@supabase/ssr` for anonymous server actions.
+  - Implemented `createAnonymousClient` using base `supabase-js` with session persistence disabled.
+  - Guaranteed stable tracking on public landing pages without requiring authenticated sessions.
 - **Video Player Architecture**:
   - Replaced native HTML5 `<video>` element with `react-player` for better stability and YouTube support.
   - Fixed `NotSupportedError` by implementing robust source handling.
