@@ -23,14 +23,10 @@ export function StepWrapper({ children, title, subtitle }: StepWrapperProps) {
           {title}
         </h2>
         {subtitle && (
-          <p className="text-zinc-500 dark:text-zinc-400">
-            {subtitle}
-          </p>
+          <p className="text-zinc-500 dark:text-zinc-400">{subtitle}</p>
         )}
       </div>
-      <div className="flex-1">
-        {children}
-      </div>
+      <div className="flex-1">{children}</div>
     </motion.div>
   )
 }

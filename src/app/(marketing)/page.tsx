@@ -1,46 +1,40 @@
 import { Check, Star, Users, ShieldCheck, Plane } from 'lucide-react'
 import Image from 'next/image'
 
-import { Hero } from '@/components/features/marketing/hero'
-import { LifestyleSection } from '@/components/features/marketing/lifestyle-section'
-import { MaxWidthWrapper } from '@/components/layout/max-width-wrapper'
+import { Hero } from '@/components/marketing/hero'
+import { LifestyleSection } from '@/components/marketing/lifestyle-section'
+import { Section } from '@/components/shared/section'
+import { Container } from '@/components/shared/container'
+import { Heading } from '@/components/shared/heading'
+import { StatCard } from '@/components/shared/stat-card'
 
 export default function Home() {
+  const stats = [
+    { label: 'Vidas Transformadas', value: '500+', icon: Users },
+    { label: 'Satisfação', value: '99%', icon: Star },
+    { label: 'Suporte 24/7', value: 'Premium', icon: ShieldCheck },
+    { label: 'Destinos na Irlanda', value: 'Top 5', icon: Plane },
+  ]
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
       <Hero />
 
       {/* Social Proof / Stats */}
-      <section className="py-20 bg-white">
-        <MaxWidthWrapper>
+      <Section>
+        <Container>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { label: 'Vidas Transformadas', value: '500+', icon: Users },
-              { label: 'Satisfação', value: '99%', icon: Star },
-              { label: 'Suporte 24/7', value: 'Premium', icon: ShieldCheck },
-              { label: 'Destinos na Irlanda', value: 'Top 5', icon: Plane },
-            ].map((stat, i) => (
-              <div
-                key={i}
-                className="flex flex-col items-center text-center space-y-2"
-              >
-                <div className="p-3 rounded-full bg-emerald-50 text-emerald-600">
-                  <stat.icon className="w-6 h-6" />
-                </div>
-                <p className="text-3xl font-bold text-zinc-900">{stat.value}</p>
-                <p className="text-sm text-zinc-500 font-medium uppercase tracking-wider">
-                  {stat.label}
-                </p>
-              </div>
+            {stats.map((stat, i) => (
+              <StatCard key={i} {...stat} />
             ))}
           </div>
-        </MaxWidthWrapper>
-      </section>
+        </Container>
+      </Section>
 
       {/* Storytelling / O Well */}
-      <section id="sobre" className="py-24 bg-zinc-50 overflow-hidden">
-        <MaxWidthWrapper>
+      <Section id="sobre" className="bg-zinc-50">
+        <Container>
           <div className="flex flex-col md:flex-row items-center gap-16">
             <div className="flex-1 relative">
               <div className="aspect-[4/5] rounded-2xl bg-zinc-200 overflow-hidden shadow-2xl rotate-2 relative">
@@ -60,9 +54,9 @@ export default function Home() {
             </div>
 
             <div className="flex-1 space-y-8 text-left">
-              <h2 className="text-4xl font-bold tracking-tight text-zinc-900">
+              <Heading>
                 De brasileiro para brasileiro: Eu estive no seu lugar.
-              </h2>
+              </Heading>
               <div className="space-y-4 text-zinc-600 text-lg leading-relaxed">
                 <p>
                   Quando decidi mudar para a Irlanda, ouvi de tudo. Agências que
@@ -92,19 +86,19 @@ export default function Home() {
               </ul>
             </div>
           </div>
-        </MaxWidthWrapper>
-      </section>
+        </Container>
+      </Section>
 
       {/* Lifestyle Cinematic Section */}
       <LifestyleSection />
 
       {/* Why Ireland Section */}
-      <section className="py-24 bg-zinc-900 text-white">
-        <MaxWidthWrapper className="text-center space-y-16">
+      <Section dark>
+        <Container className="text-center space-y-16">
           <div className="max-w-3xl mx-auto space-y-4">
-            <h2 className="text-4xl md:text-5xl font-bold">
+            <Heading level={2} className="text-white">
               Por que escolher a Irlanda?
-            </h2>
+            </Heading>
             <p className="text-zinc-400 text-lg">
               A Ilha Esmeralda oferece oportunidades únicas que você não
               encontra em nenhum outro lugar da Europa.
@@ -138,16 +132,16 @@ export default function Home() {
               </div>
             ))}
           </div>
-        </MaxWidthWrapper>
-      </section>
+        </Container>
+      </Section>
 
       {/* CTA Final */}
       <section className="py-32 relative overflow-hidden">
         <div className="absolute inset-0 bg-emerald-600 -z-10"></div>
-        <MaxWidthWrapper className="text-center space-y-10">
-          <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight">
+        <Container className="text-center space-y-10">
+          <Heading level={2} className="text-white md:text-6xl">
             Pronto para transformar sua realidade?
-          </h2>
+          </Heading>
           <p className="text-emerald-50 text-xl max-w-2xl mx-auto">
             As vagas para a mentoria de 2024 estão abertas. Clique abaixo e
             inicie sua jornada com segurança total.
@@ -160,7 +154,7 @@ export default function Home() {
               Falar com o Well no WhatsApp
             </a>
           </div>
-        </MaxWidthWrapper>
+        </Container>
       </section>
     </div>
   )

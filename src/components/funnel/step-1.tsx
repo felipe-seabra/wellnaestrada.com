@@ -2,22 +2,19 @@
 
 import { useFunnel } from './funnel-context'
 import { StepWrapper } from './step-wrapper'
-import { Input } from '../../ui/input'
-import { Button } from '../../ui/button'
-import { Label } from '../../ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
 import { ArrowRight } from 'lucide-react'
 
 export function Step1() {
   const { form, nextStep } = useFunnel()
-  
+
   const name = form.watch('full_name')
   const isValid = name && name.length >= 3
 
   return (
-    <StepWrapper 
-      title="Vamos começar!" 
-      subtitle="Como podemos te chamar?"
-    >
+    <StepWrapper title="Vamos começar!" subtitle="Como podemos te chamar?">
       <div className="space-y-6">
         <div className="space-y-2">
           <Label htmlFor="full_name">Nome completo</Label>
@@ -29,7 +26,9 @@ export function Step1() {
             autoFocus
           />
           {form.formState.errors.full_name && (
-            <p className="text-sm text-destructive">{form.formState.errors.full_name.message}</p>
+            <p className="text-sm text-destructive">
+              {form.formState.errors.full_name.message}
+            </p>
           )}
         </div>
 

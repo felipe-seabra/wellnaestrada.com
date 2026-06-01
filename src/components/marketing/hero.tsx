@@ -4,13 +4,15 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, Lock, Sparkles } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
-import { VSLPlayer } from '../vsl/vsl-player'
-import { MaxWidthWrapper } from '../../layout/max-width-wrapper'
-import { Button } from '../../ui/button'
+import { VSLPlayer } from '@/features/vsl/vsl-player'
+import { Container } from '@/components/shared/container'
+import { Heading } from '@/components/shared/heading'
+import { CTAButton } from '@/components/shared/cta-button'
+import { Button } from '@/components/ui/button'
 import { FunnelProvider } from '../funnel/funnel-context'
 import { FunnelModal } from '../funnel/funnel-modal'
-import { trackEvent } from '@/actions/leads'
-import { VSL_CONFIG } from '@/lib/constants/video'
+import { trackEvent } from '@/features/analytics/actions'
+import { VSL_CONFIG } from '@/features/vsl/constants'
 
 export const HeroContent = () => {
   const [isUnlocked, setIsUnlocked] = useState(false)
@@ -28,7 +30,7 @@ export const HeroContent = () => {
   }, [])
 
   return (
-    <MaxWidthWrapper className="relative pb-24 pt-10 sm:pt-16 lg:pt-24 flex flex-col items-center">
+    <Container className="relative pb-24 pt-10 sm:pt-16 lg:pt-24 flex flex-col items-center">
       {/* Background Decorative Elements */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute left-[50%] top-0 h-[1000px] w-[1000px] -translate-x-[50%] [mask-image:radial-gradient(closest-side,white,transparent)] sm:left-[-20%] lg:left-[10%]">
@@ -48,31 +50,32 @@ export const HeroContent = () => {
       </motion.div>
 
       <div className="text-center max-w-4xl mx-auto px-4">
-        <motion.h1
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-zinc-900 leading-[1.1] text-balance"
         >
-          O mapa estratégico para o seu{' '}
-          <span className="relative inline-block">
-            <span className="relative z-10 text-emerald-600">
-              intercâmbio premium
+          <Heading level={1}>
+            O mapa estratégico para o seu{' '}
+            <span className="relative inline-block">
+              <span className="relative z-10 text-emerald-600">
+                intercâmbio premium
+              </span>
+              <svg
+                className="absolute -bottom-2 left-0 w-full h-3 text-emerald-500/30 -z-10"
+                viewBox="0 0 100 10"
+                preserveAspectRatio="none"
+              >
+                <path
+                  d="M0 5 Q 25 0 50 5 T 100 5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+              </svg>
             </span>
-            <svg
-              className="absolute -bottom-2 left-0 w-full h-3 text-emerald-500/30 -z-10"
-              viewBox="0 0 100 10"
-              preserveAspectRatio="none"
-            >
-              <path
-                d="M0 5 Q 25 0 50 5 T 100 5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              />
-            </svg>
-          </span>
-        </motion.h1>
+          </Heading>
+        </motion.div>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -129,9 +132,9 @@ export const HeroContent = () => {
               transition={{ type: 'spring', damping: 15, stiffness: 200 }}
               className="w-full"
             >
-              <Button
-                size="lg"
-                className="w-full h-16 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-[0_0_30px_rgba(16,185,129,0.3)] transition-all hover:scale-[1.02] active:scale-[0.98] flex gap-3 text-lg font-bold group"
+              <CTAButton
+                glow
+                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white flex gap-3 group"
                 onClick={() => {
                   setIsModalOpen(true)
                   trackEvent({
@@ -144,7 +147,7 @@ export const HeroContent = () => {
                 <Sparkles className="w-6 h-6 animate-pulse" />
                 Iniciar meu planejamento
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              </CTAButton>
               <p className="mt-3 text-sm text-emerald-500 font-medium text-center">
                 Acesso liberado! Clique acima para começar.
               </p>
@@ -154,7 +157,7 @@ export const HeroContent = () => {
       </div>
 
       <FunnelModal open={isModalOpen} onOpenChange={setIsModalOpen} />
-    </MaxWidthWrapper>
+    </Container>
   )
 }
 

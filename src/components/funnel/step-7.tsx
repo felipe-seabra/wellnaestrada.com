@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { CheckCircle2, PartyPopper } from 'lucide-react'
-import { Button } from '../../ui/button'
+import { Button } from '@/components/ui/button'
 
 export function Step7() {
   return (
@@ -31,7 +31,8 @@ export function Step7() {
         transition={{ delay: 0.3 }}
         className="text-zinc-600 dark:text-zinc-400 text-lg mb-8 max-w-md"
       >
-        Obrigado por confiar no Well na Estrada. Em breve, nossa equipe entrará em contato pelo seu WhatsApp para dar os próximos passos.
+        Obrigado por confiar no Well na Estrada. Em breve, nossa equipe entrará
+        em contato pelo seu WhatsApp para dar os próximos passos.
       </motion.p>
 
       <motion.div

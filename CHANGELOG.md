@@ -6,29 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
-### Changed
-- **Centralized VSL Configuration**:
-  - Created `src/lib/constants/video.ts` as the single source of truth for VSL parameters.
-  - Refactored `Hero`, `VSLPlayer`, and tracking logic to consume centralized constants.
-  - Updated VSL video to the official consultancy version (`MBGdI_eRwIA`).
-- **Browser-Compliant Video Autoplay**:
-  - Implemented `muted={true}` by default for viewport-triggered autoplay to comply with browser policies.
-  - Added a clear "Clique para ativar o áudio" overlay that unlocks sound and shows player controls.
-  - Ensured stable playback across all modern browsers without `NotAllowedError`.
-
 ### Fixed
-- **Root Cause of JWT Errors**:
-  - Completely eradicated `JWSError (CompactDecodeError)` by disabling session persistence and auto-detection in both browser and server Supabase clients for public flows.
-  - Ensured no cookie parsing or JWT validation occurs on the landing page, guaranteeing 100% stability for anonymous users.
-- **Persistent JWT Errors**:
-  - Resolved `JWSError (CompactDecodeError)` by bypassing `@supabase/ssr` for anonymous server actions.
-  - Implemented `createAnonymousClient` using base `supabase-js` with session persistence disabled.
-  - Guaranteed stable tracking on public landing pages without requiring authenticated sessions.
-- **Video Player Architecture**:
-  - Replaced native HTML5 `<video>` element with `react-player` for better stability and YouTube support.
-  - Fixed `NotSupportedError` by implementing robust source handling.
-  - Refactored `useVideoTracking` hook to be player-agnostic.
-  - Implemented dynamic loading for video player to optimize performance and prevent hydration issues.
+- **VSL Loading Issue**:
+  - Replaced generic `react-player` import with specific `react-player/youtube` lazy-loaded component.
+  - Fixed "black screen" issue by ensuring correct YouTube URL handling and player initialization.
+  - Resolved "native player" fallback by improving provider detection.
+
+### Changed
+- **Architecture Refactor (Clean Architecture)**:
+  - Reorganized project structure into `components/`, `features/`, `lib/`, and `hooks/`.
+  - Moved domain-specific logic to `features/` (`vsl`, `lead-form`, `analytics`).
+  - Centralized reusable UI patterns into `components/shared/` (`Section`, `Container`, `Heading`, `StatCard`, `CTAButton`).
+  - Refactored `src/app/(marketing)/page.tsx` to use shared components, significantly reducing layout duplication.
+- **Analytics & Lead Unification**:
+  - Consolidated duplicate `trackEvent` logic into a single feature-based service.
+  - Separated Server Actions for Leads and Analytics into their respective features.
+  - Implemented centralized Zod validation in `src/lib/validations/`.
+
+### Removed
+- **Project Cleanup**:
+  - Deleted unused/empty directories: `src/app/(funnel)`, `src/schemas`, `src/services`, `src/types`.
+  - Removed dead code and abandoned experiments in `src/actions` and `src/lib`.
+  - Cleaned up redundant layout wrappers in favor of shared components.
+
+## [0.2.0] - 2026-05-29
 
 
 ### Added

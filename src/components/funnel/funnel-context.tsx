@@ -5,16 +5,7 @@ import { useForm, UseFormReturn } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 
-const funnelSchema = z.object({
-  full_name: z.string().min(3, 'Nome muito curto'),
-  email: z.string().email('E-mail inválido'),
-  phone: z.string().min(10, 'Telefone inválido'),
-  current_moment: z.string().min(1, 'Selecione uma opção'),
-  financial_planning: z.string().min(1, 'Selecione uma opção'),
-  goal: z.string().min(5, 'Conte um pouco mais sobre seu sonho'),
-})
-
-type FunnelData = z.infer<typeof funnelSchema>
+import { funnelSchema, type FunnelData } from '@/lib/validations/funnel'
 
 interface FunnelContextType {
   form: UseFormReturn<FunnelData>

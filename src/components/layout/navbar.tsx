@@ -1,15 +1,17 @@
 import Link from 'next/link'
 import { Sparkles } from 'lucide-react'
-import { buttonVariants } from '../ui/button'
-import { MaxWidthWrapper } from './max-width-wrapper'
+import { buttonVariants } from '@/components/ui/button'
+import { Container } from '@/components/shared/container'
 
 export const Navbar = () => {
   return (
     <nav className="sticky h-16 inset-x-0 top-0 z-50 w-full border-b border-border/40 bg-background/60 backdrop-blur-lg transition-all">
-      <MaxWidthWrapper>
+      <Container>
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex z-40 items-center gap-2">
-            <span className="font-serif italic text-xl text-emerald-600">Well na Estrada</span>
+            <span className="font-serif italic text-xl text-emerald-600">
+              Well na Estrada
+            </span>
           </Link>
 
           <div className="hidden items-center space-x-4 sm:flex">
@@ -30,7 +32,8 @@ export const Navbar = () => {
               }}
               className={buttonVariants({
                 size: 'sm',
-                className: 'gap-2 bg-emerald-600 hover:bg-emerald-500 text-white',
+                className:
+                  'gap-2 bg-emerald-600 hover:bg-emerald-500 text-white',
               })}
             >
               <Sparkles className="h-4 w-4" />
@@ -38,8 +41,7 @@ export const Navbar = () => {
             </Link>
           </div>
         </div>
-      </MaxWidthWrapper>
+      </Container>
     </nav>
   )
 }
-

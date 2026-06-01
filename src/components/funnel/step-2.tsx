@@ -2,20 +2,20 @@
 
 import { useFunnel } from './funnel-context'
 import { StepWrapper } from './step-wrapper'
-import { Input } from '../../ui/input'
-import { Button } from '../../ui/button'
-import { Label } from '../../ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
 import { ArrowRight, ChevronLeft } from 'lucide-react'
 
 export function Step2() {
   const { form, nextStep, prevStep } = useFunnel()
-  
+
   const email = form.watch('email')
   const isValid = email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 
   return (
-    <StepWrapper 
-      title="Prazer em te conhecer!" 
+    <StepWrapper
+      title="Prazer em te conhecer!"
       subtitle="Qual seu melhor e-mail para receber o planejamento?"
     >
       <div className="space-y-6">
@@ -30,7 +30,9 @@ export function Step2() {
             autoFocus
           />
           {form.formState.errors.email && (
-            <p className="text-sm text-destructive">{form.formState.errors.email.message}</p>
+            <p className="text-sm text-destructive">
+              {form.formState.errors.email.message}
+            </p>
           )}
         </div>
 

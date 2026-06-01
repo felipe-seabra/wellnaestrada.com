@@ -9,9 +9,19 @@
 ## 2. Architecture & Stack
 - **Frontend:** Next.js 15 (App Router), React 19, Tailwind CSS 4.
 - **Backend:** PostgreSQL (Generic migrations, Supabase compatible, SSR integration).
-- **Core Libraries:** Framer Motion (Premium motion & Viewport tracking), React Hook Form + Zod (Funnel validation), ReactPlayer (Stable YouTube-first video engine).
-- **Architecture:** Next.js Server Actions for lead creation and analytics. Context API for multi-step form state. Dynamic loading for third-party scripts/players to prevent hydration mismatches. **Zero-JWT public flow**: Supabase clients (browser and server) are configured to skip session persistence and detection for anonymous tracking, eradicating `JWSError`. Viewport-aware autoplay muted with explicit unmute control for VSL. Centralized VSL configuration in `src/lib/constants/video.ts`.
-- **Infrastructure:** Dockerized local environment with PostgreSQL 15, PostgREST API, and Adminer.
+- **Architecture (Clean Architecture):** 
+  - **Shared Components:** Centralized reusable UI patterns in `src/components/shared/` (Section, Container, Heading, StatCard, CTAButton).
+  - **Feature-Based Logic:** Domain-specific logic organized in `src/features/` (vsl, lead-form, analytics).
+  - **Validations:** Centralized Zod schemas in `src/lib/validations/`.
+  - **Server Actions:** Secure feature-based actions for lead creation and analytics.
+- **Core Libraries:** 
+  - Framer Motion (Premium motion & Viewport tracking).
+  - React Hook Form + Zod (Funnel validation).
+  - ReactPlayer (Stable YouTube-specific lazy loading).
+- **Public Flow Strategy:** 
+  - **Zero-JWT tracking**: Anonymous Supabase clients skip session persistence to prevent `JWSError`.
+  - **VSL Experience:** Viewport-aware muted autoplay with explicit unmute control.
+- **Infrastructure:** Dockerized environment (PostgreSQL 15, PostgREST, Adminer).
 
 ## 3. UX & Conversion Strategy (VSL Funnel)
 - **Mechanism:** User watches 15s of VSL to unlock the "Iniciar Planejamento" button.

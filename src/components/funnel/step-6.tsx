@@ -2,22 +2,24 @@
 
 import { useFunnel } from './funnel-context'
 import { StepWrapper } from './step-wrapper'
-import { Textarea } from '../../ui/textarea'
-import { Button } from '../../ui/button'
-import { Label } from '../../ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
 import { ChevronLeft, CheckCircle2, Loader2 } from 'lucide-react'
-import { createLead, trackEvent } from '@/actions/leads'
+import { createLead } from '@/features/lead-form/actions'
+import { trackEvent } from '@/features/analytics/actions'
 
 export function Step6() {
-  const { form, prevStep, isSubmitting, setIsSubmitting, nextStep } = useFunnel()
-  
+  const { form, prevStep, isSubmitting, setIsSubmitting, nextStep } =
+    useFunnel()
+
   const goal = form.watch('goal')
   const isValid = goal && goal.length >= 5
 
   const onSubmit = async () => {
     setIsSubmitting(true)
     const data = form.getValues()
-    
+
     try {
       const result = await createLead({
         full_name: data.full_name,
@@ -50,8 +52,8 @@ export function Step6() {
   }
 
   return (
-    <StepWrapper 
-      title="Para finalizar..." 
+    <StepWrapper
+      title="Para finalizar..."
       subtitle="Qual seu maior objetivo ou sonho com esse intercâmbio?"
     >
       <div className="space-y-6">
@@ -65,7 +67,9 @@ export function Step6() {
             autoFocus
           />
           {form.formState.errors.goal && (
-            <p className="text-sm text-destructive">{form.formState.errors.goal.message}</p>
+            <p className="text-sm text-destructive">
+              {form.formState.errors.goal.message}
+            </p>
           )}
         </div>
 

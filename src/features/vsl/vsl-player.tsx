@@ -3,18 +3,16 @@
 import { useState, useRef, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useInView } from 'framer-motion'
-import { useVideoTracking } from '@/hooks/use-video-tracking'
+import { useVideoTracking } from './use-video-tracking'
 import { cn } from '@/lib/utils'
 
-const ReactPlayer = dynamic<any>(
-  () => import('react-player').then((mod) => mod.default),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="absolute inset-0 bg-zinc-900 animate-pulse rounded-2xl" />
-    ),
-  },
-)
+// @ts-ignore - react-player/youtube types are tricky in some environments
+const ReactPlayer = dynamic<any>(() => import('react-player/youtube'), {
+  ssr: false,
+  loading: () => (
+    <div className="absolute inset-0 bg-zinc-900 animate-pulse rounded-2xl" />
+  ),
+})
 
 interface VSLPlayerProps {
   videoUrl: string
@@ -22,7 +20,7 @@ interface VSLPlayerProps {
   className?: string
 }
 
-import { VSL_CONFIG } from '@/lib/constants/video'
+import { VSL_CONFIG } from './constants'
 
 export function VSLPlayer({ videoUrl, onUnlock, className }: VSLPlayerProps) {
   const containerRef = useRef<HTMLDivElement>(null)

@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useState } from 'react'
-import { trackEvent } from '@/actions/leads'
+import { trackEvent } from '@/features/analytics/actions'
 
 interface UseVideoTrackingProps {
   videoId: string

@@ -2,20 +2,20 @@
 
 import { useFunnel } from './funnel-context'
 import { StepWrapper } from './step-wrapper'
-import { Input } from '../../ui/input'
-import { Button } from '../../ui/button'
-import { Label } from '../../ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
 import { ArrowRight, ChevronLeft } from 'lucide-react'
 
 export function Step3() {
   const { form, nextStep, prevStep } = useFunnel()
-  
+
   const phone = form.watch('phone')
   const isValid = phone && phone.length >= 10
 
   return (
-    <StepWrapper 
-      title="Quase lá!" 
+    <StepWrapper
+      title="Quase lá!"
       subtitle="Qual seu WhatsApp para enviarmos o acesso?"
     >
       <div className="space-y-6">
@@ -29,7 +29,9 @@ export function Step3() {
             autoFocus
           />
           {form.formState.errors.phone && (
-            <p className="text-sm text-destructive">{form.formState.errors.phone.message}</p>
+            <p className="text-sm text-destructive">
+              {form.formState.errors.phone.message}
+            </p>
           )}
         </div>
 
