@@ -9,7 +9,7 @@ export const Navbar = () => {
       <Container>
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex z-40 items-center gap-2">
-            <span className="font-serif italic text-xl text-emerald-600">
+            <span className="font-brand text-2xl text-emerald-600">
               Well na Estrada
             </span>
           </Link>

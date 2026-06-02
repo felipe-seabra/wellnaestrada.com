@@ -24,6 +24,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ### Changed
+- **Visual Identity Redesign**:
+  - Introduced "Kaushan Script" as the primary brand font for a "brush/travel-oriented" aesthetic.
+  - Redesigned the Hero branding to be significantly larger (up to `9xl` on desktop) for maximum visual impact.
+  - Prioritized "Well na Estrada" branding as the main focal point, communicating the creator's identity before the service value proposition.
+  - Applied premium visual treatments including subtle text shadows and emerald accent coloring.
+  - Updated Navbar branding for cross-platform consistency.
 - **Architecture Refactor (Clean Architecture)**:
   - Reorganized project structure into `components/`, `features/`, `lib/`, and `hooks/`.
   - Moved domain-specific logic to `features/` (`vsl`, `lead-form`, `analytics`).

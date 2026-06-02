@@ -41,9 +41,9 @@ export const HeroContent = () => {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-6"
+        className="mb-8 text-center"
       >
-        <span className="text-emerald-500 font-serif italic text-2xl sm:text-3xl tracking-wide">
+        <span className="text-emerald-500 font-brand text-6xl sm:text-7xl lg:text-9xl drop-shadow-[0_2px_2px_rgba(0,0,0,0.05)] block leading-tight">
           Well na Estrada
         </span>
       </motion.div>
@@ -54,7 +54,7 @@ export const HeroContent = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
-          <Heading level={1}>
+          <Heading level={1} className="text-3xl sm:text-5xl lg:text-6xl">
             O mapa estratégico para o seu{' '}
             <span className="relative inline-block">
               <span className="relative z-10 text-emerald-600">

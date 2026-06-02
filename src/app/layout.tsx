@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Geist, Geist_Mono, Kaushan_Script } from 'next/font/google'
 
 import './globals.css'
 import { constructMetadata } from '@/lib/metadata'
@@ -14,6 +14,12 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
+const kaushan = Kaushan_Script({
+  weight: '400',
+  variable: '--font-kaushan',
+  subsets: ['latin'],
+})
+
 export const metadata: Metadata = constructMetadata()
 
 export default function RootLayout({
@@ -24,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased selection:bg-primary selection:text-primary-foreground`}
+        className={`${geistSans.variable} ${geistMono.variable} ${kaushan.variable} font-sans antialiased selection:bg-primary selection:text-primary-foreground`}
       >
         {children}
       </body>
