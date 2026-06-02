@@ -3,6 +3,8 @@ import { Container } from '@/components/shared/container'
 import { Heading } from '@/components/shared/heading'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
+import { SettingsService } from '@/services/settings.service'
+import { ContentService } from '@/services/content.service'
 
 export const metadata: Metadata = {
   title: 'Política de Privacidade | Well na Estrada',
@@ -10,12 +12,17 @@ export const metadata: Metadata = {
     'Conheça nossa política de privacidade e como tratamos seus dados de acordo com a LGPD e GDPR.',
 }
 
-export default function PrivacyPolicyPage() {
+export default async function PrivacyPolicyPage() {
+  const [brandSettings, footerContent] = await Promise.all([
+    SettingsService.getBrandSettings(),
+    ContentService.getFooterContent(),
+  ])
+
   const lastUpdate = '02 de Junho de 2026'
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      <Navbar brandName={brandSettings.brandName} />
       <main className="flex-grow py-24">
         <Container className="max-w-3xl">
           <div className="space-y-8">
@@ -34,7 +41,7 @@ export default function PrivacyPolicyPage() {
                   1. Quem Somos
                 </h2>
                 <p>
-                  A <strong>Well na Estrada</strong> é uma consultoria
+                  A <strong>{brandSettings.brandName}</strong> é uma consultoria
                   especializada em mentoria para intercâmbio e mudança de vida
                   para a Irlanda. Nosso compromisso é com a transparência e a
                   segurança dos dados de nossos mentorados e visitantes.
@@ -116,8 +123,8 @@ export default function PrivacyPolicyPage() {
                 <p>
                   Seus dados são armazenados em servidores seguros com
                   criptografia e acesso restrito apenas a membros autorizados da
-                  equipe Well na Estrada. Não compartilhamos, vendemos ou
-                  alugamos seus dados para terceiros.
+                  equipe {brandSettings.brandName}. Não compartilhamos, vendemos
+                  ou alugamos seus dados para terceiros.
                 </p>
               </div>
 
@@ -133,14 +140,20 @@ export default function PrivacyPolicyPage() {
                 </ul>
                 <p className="mt-4">
                   Para qualquer solicitação de privacidade, entre em contato
-                  através do e-mail: <strong>contato@wellnaestrada.com</strong>.
+                  através do e-mail:{' '}
+                  <strong>{brandSettings.contactEmail}</strong>.
                 </p>
               </div>
             </section>
           </div>
         </Container>
       </main>
-      <Footer />
+      <Footer
+        brandName={brandSettings.brandName}
+        description={footerContent.description}
+        instagramUrl={brandSettings.instagramUrl}
+        contactEmail={brandSettings.contactEmail}
+      />
     </div>
   )
 }

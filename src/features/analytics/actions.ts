@@ -1,6 +1,6 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
+import { AnalyticsService } from '@/services/analytics.service'
 
 export type AnalyticsEventInput = {
   event_name: string
@@ -14,20 +14,15 @@ export type AnalyticsEventInput = {
 
 export async function trackEvent(input: AnalyticsEventInput) {
   try {
-    // Use anonymous client for public analytics to avoid JWT issues
-    const supabase = await createClient({ anonymous: true })
-
-    const { error } = await supabase.from('analytics_events').insert([
-      {
-        event_name: input.event_name,
-        url: input.url,
-        payload: input.payload || {},
-        lead_id: input.lead_id,
-        session_id: input.session_id,
-        funnel_id: input.funnel_id,
-        variant_id: input.variant_id,
-      },
-    ])
+    const { error } = await AnalyticsService.trackEvent({
+      event_name: input.event_name,
+      url: input.url,
+      payload: input.payload || {},
+      lead_id: input.lead_id,
+      session_id: input.session_id,
+      funnel_id: input.funnel_id,
+      variant_id: input.variant_id,
+    })
 
     if (error) {
       return { success: false, error: error.message }

@@ -8,8 +8,27 @@ import { Container } from '@/components/shared/container'
 import { Heading } from '@/components/shared/heading'
 import { StatCard } from '@/components/shared/stat-card'
 import { Footer } from '@/components/layout/footer'
+import { Navbar } from '@/components/layout/navbar'
+import { SettingsService } from '@/services/settings.service'
+import { ContentService } from '@/services/content.service'
 
-export default function Home() {
+export default async function Home() {
+  const [
+    brandSettings,
+    videoConfig,
+    heroContent,
+    footerContent,
+    aboutContent,
+    whyIrelandContent,
+  ] = await Promise.all([
+    SettingsService.getBrandSettings(),
+    SettingsService.getVideoConfig(),
+    ContentService.getHeroContent(),
+    ContentService.getFooterContent(),
+    ContentService.getAboutContent(),
+    ContentService.getWhyIrelandContent(),
+  ])
+
   const stats = [
     { label: 'Vidas Transformadas', value: '500+', icon: Users },
     { label: 'Satisfação', value: '99%', icon: Star },
@@ -19,8 +38,16 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <Navbar brandName={brandSettings.brandName} />
+
       {/* Hero Section */}
-      <Hero />
+      <Hero
+        brandName={brandSettings.brandName}
+        title={heroContent.title}
+        subtitle={heroContent.subtitle}
+        videoId={videoConfig.youtubeId}
+        unlockSeconds={videoConfig.unlockSeconds}
+      />
 
       {/* Social Proof / Stats */}
       <Section>
@@ -41,7 +68,7 @@ export default function Home() {
               <div className="aspect-[4/5] rounded-2xl bg-zinc-200 overflow-hidden shadow-2xl rotate-2 relative">
                 <Image
                   src="/images/well.jpg"
-                  alt="Well na Estrada na Irlanda"
+                  alt={`${brandSettings.brandName} na Irlanda`}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
@@ -49,25 +76,20 @@ export default function Home() {
               </div>
               <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-emerald-600 rounded-2xl -rotate-3 -z-10 flex items-end p-4">
                 <p className="text-white font-serif text-2xl italic leading-tight">
-                  &quot;Sua jornada é única.&quot;
+                  &quot;{aboutContent.quote}&quot;
                 </p>
               </div>
             </div>
 
             <div className="flex-1 space-y-8 text-left">
-              <Heading>
-                De brasileiro para brasileiro: Eu estive no seu lugar.
-              </Heading>
+              <Heading>{aboutContent.title}</Heading>
               <div className="space-y-4 text-zinc-600 text-lg leading-relaxed">
+                <p>{aboutContent.p1}</p>
                 <p>
-                  Quando decidi mudar para a Irlanda, ouvi de tudo. Agências que
-                  só queriam vender cursos e promessas que não batiam com a
-                  realidade de quem vive aqui.
-                </p>
-                <p>
-                  A <strong>Well na Estrada</strong> nasceu para ser o guia que
-                  eu gostaria de ter tido. Sem letras miúdas, com suporte real e
-                  uma estratégia personalizada para o <em>seu</em> objetivo.
+                  {aboutContent.p2.replace(
+                    'brand_name',
+                    brandSettings.brandName,
+                  )}
                 </p>
               </div>
               <ul className="space-y-3">
@@ -91,36 +113,22 @@ export default function Home() {
       </Section>
 
       {/* Lifestyle Cinematic Section */}
-      <LifestyleSection />
+      <LifestyleSection brandName={brandSettings.brandName} />
 
       {/* Why Ireland Section */}
       <Section dark>
         <Container className="text-center space-y-16">
           <div className="max-w-3xl mx-auto space-y-4">
             <Heading level={2} className="text-white">
-              Por que escolher a Irlanda?
+              {whyIrelandContent.title}
             </Heading>
             <p className="text-zinc-400 text-lg">
-              A Ilha Esmeralda oferece oportunidades únicas que você não
-              encontra em nenhum outro lugar da Europa.
+              {whyIrelandContent.subtitle}
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                title: 'Salário em Euro',
-                desc: 'Um dos maiores salários mínimos da Europa, permitindo viver bem e guardar dinheiro.',
-              },
-              {
-                title: 'Visto de Trabalho',
-                desc: 'Estudantes podem trabalhar legalmente, facilitando a imigração e o sustento.',
-              },
-              {
-                title: 'Porta para a Europa',
-                desc: 'Viaje para Paris, Londres ou Roma com passagens que custam menos que um jantar.',
-              },
-            ].map((card, i) => (
+            {whyIrelandContent.items.map((card: any, i: number) => (
               <div
                 key={i}
                 className="p-8 rounded-2xl bg-zinc-800/50 border border-zinc-800 hover:border-emerald-500/50 transition-colors text-left space-y-4 group"
@@ -136,7 +144,12 @@ export default function Home() {
         </Container>
       </Section>
 
-      <Footer />
+      <Footer
+        brandName={brandSettings.brandName}
+        description={footerContent.description}
+        instagramUrl={brandSettings.instagramUrl}
+        contactEmail={brandSettings.contactEmail}
+      />
     </div>
   )
 }

@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Architecture Refactor (Clean Architecture)**:
+  - Implemented Repository and Service layers to decouple UI from data persistence.
+  - Created `LeadRepository`, `SettingsRepository`, `ContentRepository`, and `AnalyticsRepository`.
+  - Created `LeadsService`, `SettingsService`, `ContentService`, and `AnalyticsService`.
+  - Added new Supabase tables `platform_settings` and `platform_content` for dynamic content management.
+- **Admin Dashboard Expansion**:
+  - Expanded `/internal` route with a professional admin layout and sidebar navigation.
+  - Added `/internal/leads` for CRM-style lead management.
+  - Added `/internal/settings` for dynamic brand and VSL configuration.
+  - Added main `/internal` dashboard with high-level metrics (Total Leads, Leads Today, Recent Activity).
+- **Configuration-Driven UI**:
+  - Landing Page components (Hero, Navbar, Footer, About, Why Ireland) are now fully dynamic, fetching data from the Services layer.
+  - Removed hardcoded brand names, video IDs, and marketing copy from the frontend codebase.
 - **Privacy Policy Page**:
   - Created `src/app/politica-de-privacidade/page.tsx` with full compliance content (LGPD/GDPR).
   - Integrated SEO metadata for the privacy page.

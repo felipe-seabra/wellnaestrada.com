@@ -3,47 +3,37 @@
 ## 1. Project Vision & Goals
 **Well na Estrada** is a premium platform for Ireland exchange consultancy.
 - **Goal:** Drive premium lead conversion through a trust-building VSL funnel.
-- **Primary Conversion:** VSL Video -> Delayed CTA (15s unlock) -> Multi-step Onboarding Form -> SQL Lead Storage.
+- **Primary Conversion:** VSL Video -> Delayed CTA (Dynamic unlock) -> Multi-step Onboarding Form -> SQL Lead Storage.
 - **Aesthetic:** Cinematic, premium, emotionally strong (Emerald palette + Script branding).
 
 ## 2. Architecture & Stack
 - **Frontend:** Next.js 15 (App Router), React 19, Tailwind CSS 4.
-- **Backend:** PostgreSQL (Generic migrations, Supabase compatible, SSR integration).
-- **Architecture (Clean Architecture):** 
-  - **Shared Components:** Centralized reusable UI patterns in `src/components/shared/` (Section, Container, Heading, StatCard, CTAButton).
-  - **Feature-Based Logic:** Domain-specific logic organized in `src/features/` (vsl, lead-form, analytics).
-  - **Validations:** Centralized Zod schemas in `src/lib/validations/`.
-  - **Server Actions:** Secure feature-based actions for lead creation and analytics.
-- **Core Libraries:** 
-  - Framer Motion (Premium motion & Viewport tracking).
-  - React Hook Form + Zod (Funnel validation).
-  - YouTube IFrame API (Official player integration for VSL).
-- **Public Flow Strategy:** 
-  - **Zero-JWT tracking**: Anonymous Supabase clients skip session persistence to prevent `JWSError`.
-  - **VSL Experience:** 
-  - Viewport-aware muted autoplay with explicit unmute control.
-  - Native YouTube IFrame API integration for maximum performance.
-  - Responsive `VideoWrapper` optimized for standard landscape (16:9) orientation.
-  - Premium visual framing (glossy overlays, 2xl shadows, max-width 5xl desktop).
-- **Infrastructure:** Dockerized environment (PostgreSQL 15, PostgREST, Adminer).
+- **Backend:** Supabase (PostgreSQL, SSR integration).
+- **Clean Architecture:** 
+  - **Services (src/services/):** Domain logic and orchestration. Mandatory layer for all business rules.
+  - **Repositories (src/repositories/):** Data access and persistence abstraction. Isolates Supabase/DB from the rest of the app.
+  - **Shared Components:** Centralized reusable UI patterns in `src/components/shared/`.
+- **Configuration-Driven:** All business content (copy, brand, video config) is dynamic and managed via the Admin Dashboard. No hardcoded marketing strings in the frontend.
+- **Infrastructure:** Dockerized environment for local development.
 
 ## 3. UX & Conversion Strategy (VSL Funnel)
-- **Mechanism:** User watches 15s of VSL to unlock the "Iniciar Planejamento" button.
+- **Mechanism:** User watches a configurable amount of VSL to unlock the "Iniciar Planejamento" button.
 - **Funnel:** 7-step onboarding flow (Name, Email, WhatsApp, Current Moment, Financials, Goal, Confirmation).
 - **Persistence:** Local draft recovery for mobile-first optimization.
-- **Tracking:** Detailed session, variant, and engagement analytics (video_15s, cta_unlock, form_complete).
+- **Tracking:** Detailed session, variant, and engagement analytics (video_impression, cta_unlock, lead_captured).
 
-## 4. Infrastructure Decisions (Docker)
-- **well-db:** PostgreSQL 15 on port `54322`.
-- **well-api:** PostgREST on port `3000`.
-- **well-adminer:** Database management on port `8080`.
-- **Internal Dashboard:** `/internal` route for lead management and tracking overview.
+## 4. Admin Platform
+- **Dashboard:** Located at `/internal`.
+- **Leads:** CRM-style management of captured leads.
+- **Settings:** Management of Brand Identity (Name, Socials) and Video Configuration (YouTube ID, Unlock Time).
+- **Analytics:** High-level metrics and recent activity tracking.
 
 ## 5. Roadmap & Milestones
 - [x] Tech stack & Docker setup.
-- [x] Governance & Security standards.
-- [x] VSL Conversion Strategy (Current).
+- [x] VSL Conversion Strategy.
 - [x] Lead Funnel & Analytics implementation.
 - [x] Cinematic Lifestyle & Branding integration.
-- [ ] Advanced Internal Dashboard with filters.
-
+- [x] Clean Architecture Refactor (Services/Repositories).
+- [x] Expanded Admin Dashboard (Leads, Analytics, Settings).
+- [ ] Advanced Filters for Leads.
+- [ ] Content Management UI for all landing sections.

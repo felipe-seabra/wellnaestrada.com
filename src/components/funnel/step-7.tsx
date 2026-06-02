@@ -31,8 +31,8 @@ export function Step7() {
         transition={{ delay: 0.3 }}
         className="text-zinc-600 dark:text-zinc-400 text-lg mb-8 max-w-md"
       >
-        Obrigado por confiar no Well na Estrada. Em breve, nossa equipe entrará
-        em contato pelo seu WhatsApp para dar os próximos passos.
+        Obrigado por sua confiança. Em breve, nossa equipe entrará em contato
+        pelo seu WhatsApp para dar os próximos passos.
       </motion.p>
 
       <motion.div

@@ -5,7 +5,19 @@ import { Camera, Mail } from 'lucide-react'
 import { Container } from '@/components/shared/container'
 import { NAVIGATION } from '@/lib/constants/navigation'
 
-export const Footer = () => {
+interface FooterProps {
+  brandName: string
+  description: string
+  instagramUrl: string
+  contactEmail: string
+}
+
+export const Footer = ({
+  brandName,
+  description,
+  instagramUrl,
+  contactEmail,
+}: FooterProps) => {
   const currentYear = new Date().getFullYear()
 
   const quickLinks = [
@@ -24,13 +36,10 @@ export const Footer = () => {
           <div className="md:col-span-2 space-y-6">
             <Link href={NAVIGATION.home} className="inline-block">
               <span className="font-brand text-3xl text-emerald-500">
-                Well na Estrada
+                {brandName}
               </span>
             </Link>
-            <p className="max-w-sm text-lg leading-relaxed">
-              Consultoria especializada para brasileiros que desejam estudar,
-              trabalhar e construir uma nova vida na Irlanda.
-            </p>
+            <p className="max-w-sm text-lg leading-relaxed">{description}</p>
           </div>
 
           {/* Quick Links Column */}
@@ -62,7 +71,7 @@ export const Footer = () => {
             <ul className="space-y-4">
               <li>
                 <a
-                  href={NAVIGATION.instagram}
+                  href={instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 hover:text-emerald-500 transition-colors group"
@@ -73,7 +82,7 @@ export const Footer = () => {
               </li>
               <li>
                 <a
-                  href={NAVIGATION.email}
+                  href={`mailto:${contactEmail}`}
                   className="flex items-center gap-3 hover:text-emerald-500 transition-colors group"
                 >
                   <Mail className="w-5 h-5 text-zinc-500 group-hover:text-emerald-500" />
@@ -86,7 +95,9 @@ export const Footer = () => {
 
         {/* Legal Bottom */}
         <div className="mt-16 pt-8 border-t border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-zinc-500">
-          <p>© {currentYear} Well na Estrada. Todos os direitos reservados.</p>
+          <p>
+            © {currentYear} {brandName}. Todos os direitos reservados.
+          </p>
           <p className="font-mono opacity-50 uppercase tracking-widest">
             IRL • BR
           </p>

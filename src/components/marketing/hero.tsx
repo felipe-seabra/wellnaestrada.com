@@ -13,7 +13,21 @@ import { FunnelProvider } from '../funnel/funnel-context'
 import { FunnelModal } from '../funnel/funnel-modal'
 import { trackEvent } from '@/features/analytics/actions'
 
-export const HeroContent = () => {
+interface HeroProps {
+  brandName: string
+  title: string
+  subtitle: string
+  videoId: string
+  unlockSeconds: number
+}
+
+export const HeroContent = ({
+  brandName,
+  title,
+  subtitle,
+  videoId,
+  unlockSeconds,
+}: HeroProps) => {
   const [isUnlocked, setIsUnlocked] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -44,7 +58,7 @@ export const HeroContent = () => {
         className="mb-8 text-center"
       >
         <span className="text-emerald-500 font-brand text-6xl sm:text-7xl lg:text-9xl drop-shadow-[0_2px_2px_rgba(0,0,0,0.05)] block leading-tight">
-          Well na Estrada
+          {brandName}
         </span>
       </motion.div>
 
@@ -55,24 +69,7 @@ export const HeroContent = () => {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           <Heading level={1} className="text-3xl sm:text-5xl lg:text-6xl">
-            O mapa estratégico para o seu{' '}
-            <span className="relative inline-block">
-              <span className="relative z-10 text-emerald-600">
-                intercâmbio premium
-              </span>
-              <svg
-                className="absolute -bottom-2 left-0 w-full h-3 text-emerald-500/30 -z-10"
-                viewBox="0 0 100 10"
-                preserveAspectRatio="none"
-              >
-                <path
-                  d="M0 5 Q 25 0 50 5 T 100 5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                />
-              </svg>
-            </span>
+            {title}
           </Heading>
         </motion.div>
 
@@ -82,8 +79,7 @@ export const HeroContent = () => {
           transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="mt-6 text-zinc-600 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed text-balance"
         >
-          Assista ao vídeo abaixo para liberar seu planejamento personalizado e
-          descobrir como transformar o sonho da Irlanda em realidade.
+          {subtitle}
         </motion.p>
       </div>
 
@@ -94,7 +90,11 @@ export const HeroContent = () => {
         transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
         className="mt-12 w-full max-w-5xl px-4"
       >
-        <VSLPlayer onUnlock={() => setIsUnlocked(true)} />
+        <VSLPlayer
+          videoId={videoId}
+          unlockSeconds={unlockSeconds}
+          onUnlock={() => setIsUnlocked(true)}
+        />
       </motion.div>
 
       {/* CTA Section */}
@@ -157,10 +157,10 @@ export const HeroContent = () => {
   )
 }
 
-export const Hero = () => {
+export const Hero = (props: HeroProps) => {
   return (
     <FunnelProvider>
-      <HeroContent />
+      <HeroContent {...props} />
     </FunnelProvider>
   )
 }

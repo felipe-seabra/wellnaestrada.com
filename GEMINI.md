@@ -13,20 +13,19 @@ Premium creator-led platform for Irish exchange consultancy. Focus on high-conve
 - **Infrastructure:** Docker-based local development (Postgres, PostgREST).
 
 ## Architectural Decisions
-- **VSL Implementation:** Use the official YouTube IFrame Player API directly. Avoid third-party player abstractions like `ReactPlayer` for better maintainability and control. Logic must be isolated in `src/features/vsl`.
-
-## Core Conventions
-- **Server-First:** Prefer Server Components and Server Actions.
-- **Surgical Updates:** Use targeted code changes.
-- **Documentation:** Maintain `CHANGELOG.md` and `docs/` updated.
-- **Security:** Run `npm audit` before deployment.
+- **Clean Architecture:** Use Repository/Service pattern. Components must never query Supabase directly.
+- **Repository Layer (`src/repositories/`):** Dedicated to data persistence and external integrations.
+- **Service Layer (`src/services/`):** Dedicated to business logic and cross-domain orchestration.
+- **Configuration-Driven:** All business content (copy, links, brand settings) must be managed in the database (`platform_settings`, `platform_content`) and exposed via the Admin dashboard.
+- **VSL Implementation:** Use the official YouTube IFrame Player API directly. Logic must be isolated in `src/features/vsl`.
 
 ## Folder Structure
 - `src/app`: Routes and Layouts.
-- `src/components/features`: Domain-specific logic.
-- `src/components/ui`: Shadcn/ui components.
+- `src/services`: Business logic layer.
+- `src/repositories`: Data access layer.
+- `src/components/shared`: Reusable UI patterns.
 - `src/lib`: Utilities and Supabase clients.
-- `src/actions`: Server-side mutations.
+- `src/features`: Domain-specific components and hooks.
 
 ## Deployment Safety
 Always run:

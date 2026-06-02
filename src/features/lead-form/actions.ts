@@ -1,6 +1,6 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
+import { LeadsService } from '@/services/leads.service'
 import { revalidatePath } from 'next/cache'
 
 export type LeadInput = {
@@ -16,31 +16,22 @@ export type LeadInput = {
 }
 
 export async function createLead(input: LeadInput) {
-  // Use anonymous client for public lead creation to avoid JWT errors
-  const supabase = await createClient({ anonymous: true })
+  try {
+    const data = await LeadsService.createLead({
+      full_name: input.full_name,
+      email: input.email,
+      phone: input.phone,
+      funnel_answers: input.funnel_answers,
+      video_engagement_seconds: input.video_engagement_seconds || 0,
+      session_id: input.session_id,
+      funnel_id: input.funnel_id,
+      variant_id: input.variant_id,
+      metadata: input.metadata || {},
+    })
 
-  const { data, error } = await supabase
-    .from('leads')
-    .insert([
-      {
-        full_name: input.full_name,
-        email: input.email,
-        phone: input.phone,
-        funnel_answers: input.funnel_answers,
-        video_engagement_seconds: input.video_engagement_seconds || 0,
-        session_id: input.session_id,
-        funnel_id: input.funnel_id,
-        variant_id: input.variant_id,
-        metadata: input.metadata || {},
-      },
-    ])
-    .select()
-    .single()
-
-  if (error) {
+    revalidatePath('/internal')
+    return { success: true, data }
+  } catch (error: any) {
     return { success: false, error: error.message }
   }
-
-  revalidatePath('/internal')
-  return { success: true, data }
 }

@@ -6,14 +6,20 @@ import { useVideoTracking } from '../hooks/use-video-tracking'
 import { cn } from '@/lib/utils'
 import { YouTubePlayer } from './youtube-player'
 import { VideoWrapper } from './video-wrapper'
-import { VSL_VIDEO_CONFIG } from '../constants/video'
 
 interface VSLPlayerProps {
+  videoId: string
+  unlockSeconds: number
   onUnlock?: () => void
   className?: string
 }
 
-export function VSLPlayer({ onUnlock, className }: VSLPlayerProps) {
+export function VSLPlayer({
+  videoId,
+  unlockSeconds,
+  onUnlock,
+  className,
+}: VSLPlayerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(true)
@@ -27,8 +33,8 @@ export function VSLPlayer({ onUnlock, className }: VSLPlayerProps) {
     handleProgress,
     handleEnded,
   } = useVideoTracking({
-    videoId: VSL_VIDEO_CONFIG.videoId,
-    unlockThreshold: VSL_VIDEO_CONFIG.unlockSeconds,
+    videoId,
+    unlockThreshold: unlockSeconds,
   })
 
   // Notify parent when unlocked
@@ -57,7 +63,7 @@ export function VSLPlayer({ onUnlock, className }: VSLPlayerProps) {
     <div ref={containerRef} className={className}>
       <VideoWrapper>
         <YouTubePlayer
-          videoId={VSL_VIDEO_CONFIG.videoId}
+          videoId={videoId}
           className="w-full h-full"
           playing={isPlaying}
           muted={isMuted}

@@ -6,14 +6,18 @@ import { Section } from '@/components/shared/section'
 import { Container } from '@/components/shared/container'
 import { Heading } from '@/components/shared/heading'
 
-export const LifestyleSection = () => {
+interface LifestyleSectionProps {
+  brandName: string
+}
+
+export const LifestyleSection = ({ brandName }: LifestyleSectionProps) => {
   return (
     <Section className="relative py-24 sm:py-32" dark>
       {/* Background Cinematic Image */}
       <div className="absolute inset-0 z-0">
         <Image
           src="/images/well.jpg"
-          alt="Well na Estrada - Lifestyle na Irlanda"
+          alt={`${brandName} - Lifestyle na Irlanda`}
           fill
           className="object-cover object-center opacity-60"
           priority
