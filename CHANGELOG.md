@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Created dedicated VSL feature module in `src/features/vsl`.
   - Implemented centralized video configuration and types.
   - Isolated player logic from business/analytics tracking.
+- **VSL Visual Improvements**:
+  - Implemented `VideoWrapper` for responsive orientation handling.
+  - Added support for portrait (9:16) video orientation to eliminate black bars.
+  - Enhanced visual framing with premium borders and glossy overlays.
+  - Optimized desktop, tablet, and mobile dimensions for maximum perceived quality.
 
 ### Changed
 - **Architecture Refactor (Clean Architecture)**:

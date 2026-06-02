@@ -20,7 +20,11 @@
   - YouTube IFrame API (Official player integration for VSL).
 - **Public Flow Strategy:** 
   - **Zero-JWT tracking**: Anonymous Supabase clients skip session persistence to prevent `JWSError`.
-  - **VSL Experience:** Viewport-aware muted autoplay with explicit unmute control.
+  - **VSL Experience:** 
+  - Viewport-aware muted autoplay with explicit unmute control.
+  - Native YouTube IFrame API integration for maximum performance.
+  - Responsive `VideoWrapper` supporting both portrait (9:16) and landscape (16:9) orientations.
+  - Premium visual framing (glossy overlays, 2xl shadows, responsive sizing).
 - **Infrastructure:** Dockerized environment (PostgreSQL 15, PostgREST, Adminer).
 
 ## 3. UX & Conversion Strategy (VSL Funnel)
