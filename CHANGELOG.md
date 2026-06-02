@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Optimized desktop (max-width 5xl) and mobile (full-width) presentation.
   - Fixed: YouTube player now correctly fills 100% of its container, eliminating black empty areas.
   - Fixed: Reverted portrait (9:16) implementation as source video is standard landscape.
+- **Terminal Cleanup**:
+  - Removed all temporary debugging logs (`console.log`, `console.error`) that were printing full HTML content in the terminal during failed API requests.
+  - Stabilized Server Actions to return clean error messages without logging raw objects.
+
 
 ### Changed
 - **Architecture Refactor (Clean Architecture)**:

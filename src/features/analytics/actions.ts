@@ -30,13 +30,11 @@ export async function trackEvent(input: AnalyticsEventInput) {
     ])
 
     if (error) {
-      console.error('Error tracking event:', error)
       return { success: false, error: error.message }
     }
 
     return { success: true }
   } catch (err) {
-    console.error('Fatal error in trackEvent:', err)
     return { success: false, error: 'Internal server error' }
   }
 }

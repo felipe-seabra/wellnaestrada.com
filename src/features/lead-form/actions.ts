@@ -38,7 +38,6 @@ export async function createLead(input: LeadInput) {
     .single()
 
   if (error) {
-    console.error('Error creating lead:', error)
     return { success: false, error: error.message }
   }
 

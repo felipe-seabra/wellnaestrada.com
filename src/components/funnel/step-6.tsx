@@ -45,7 +45,7 @@ export function Step6() {
         alert('Ocorreu um erro ao salvar seu planejamento. Tente novamente.')
       }
     } catch (error) {
-      console.error('Submission error:', error)
+      // Handle error
     } finally {
       setIsSubmitting(false)
     }

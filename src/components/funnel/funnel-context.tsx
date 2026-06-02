@@ -47,7 +47,7 @@ export function FunnelProvider({ children }: { children: React.ReactNode }) {
         const savedStep = localStorage.getItem('funnel_step')
         if (savedStep) setStep(parseInt(savedStep))
       } catch (e) {
-        console.error('Failed to restore draft', e)
+        // Silently fail restore
       }
     }
   }, [form])

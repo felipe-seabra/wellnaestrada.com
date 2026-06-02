@@ -32,7 +32,6 @@ export async function createClient(options?: { anonymous?: boolean }) {
           try {
             return cookieStore.getAll()
           } catch (error) {
-            console.warn('Supabase SSR: Error accessing cookies', error)
             return []
           }
         },
