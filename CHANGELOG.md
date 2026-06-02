@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Implemented `VideoWrapper` for responsive handling in standard landscape (16:9) format.
   - Enhanced visual framing with premium borders, glossy overlays, and 2xl shadows.
   - Optimized desktop (max-width 5xl) and mobile (full-width) presentation.
+  - Fixed: YouTube player now correctly fills 100% of its container, eliminating black empty areas.
   - Fixed: Reverted portrait (9:16) implementation as source video is standard landscape.
 
 ### Changed

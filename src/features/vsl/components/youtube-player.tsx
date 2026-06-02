@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { cn } from '@/lib/utils'
 import { useYouTubeApi } from '../hooks/use-youtube-api'
 import { PlayerEvents } from '../types'
 
@@ -40,6 +41,8 @@ export function YouTubePlayer({
 
     playerRef.current = new window.YT.Player(playerElementId, {
       videoId,
+      width: '100%',
+      height: '100%',
       playerVars: {
         autoplay: playing ? 1 : 0,
         controls: controls ? 1 : 0,
@@ -117,5 +120,20 @@ export function YouTubePlayer({
     }
   }
 
-  return <div ref={containerRef} className={className} />
+  return (
+    <div
+      ref={containerRef}
+      className={cn('yt-player-container relative w-full h-full', className)}
+    >
+      <style jsx global>{`
+        .yt-player-container iframe {
+          width: 100% !important;
+          height: 100% !important;
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
+      `}</style>
+    </div>
+  )
 }
