@@ -1,16 +1,19 @@
+'use client'
+
 import Link from 'next/link'
 import { Camera, Mail } from 'lucide-react'
 import { Container } from '@/components/shared/container'
+import { NAVIGATION } from '@/lib/constants/navigation'
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear()
 
   const quickLinks = [
-    { label: 'Início', href: '/' },
-    { label: 'Como Funciona', href: '#sobre' },
-    { label: 'Benefícios', href: '/' },
-    { label: 'Formulário de Aplicação', href: '#' },
-    { label: 'Política de Privacidade', href: '#' },
+    { label: 'Início', href: NAVIGATION.home },
+    { label: 'Como Funciona', href: NAVIGATION.about },
+    { label: 'Benefícios', href: NAVIGATION.home },
+    { label: 'Formulário de Aplicação', href: NAVIGATION.application },
+    { label: 'Política de Privacidade', href: NAVIGATION.privacy },
   ]
 
   return (
@@ -19,7 +22,7 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
           {/* Brand Column */}
           <div className="md:col-span-2 space-y-6">
-            <Link href="/" className="inline-block">
+            <Link href={NAVIGATION.home} className="inline-block">
               <span className="font-brand text-3xl text-emerald-500">
                 Well na Estrada
               </span>
@@ -38,6 +41,12 @@ export const Footer = () => {
                 <li key={link.label}>
                   <Link
                     href={link.href}
+                    onClick={(e) => {
+                      if (link.href === NAVIGATION.application) {
+                        e.preventDefault()
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                      }
+                    }}
                     className="hover:text-emerald-500 transition-colors"
                   >
                     {link.label}
@@ -53,7 +62,7 @@ export const Footer = () => {
             <ul className="space-y-4">
               <li>
                 <a
-                  href="https://instagram.com/wellnaestrada"
+                  href={NAVIGATION.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 hover:text-emerald-500 transition-colors group"
@@ -64,7 +73,7 @@ export const Footer = () => {
               </li>
               <li>
                 <a
-                  href="mailto:contato@wellnaestrada.com"
+                  href={NAVIGATION.email}
                   className="flex items-center gap-3 hover:text-emerald-500 transition-colors group"
                 >
                   <Mail className="w-5 h-5 text-zinc-500 group-hover:text-emerald-500" />

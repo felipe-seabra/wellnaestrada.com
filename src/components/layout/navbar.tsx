@@ -1,14 +1,17 @@
+'use client'
+
 import Link from 'next/link'
 import { Sparkles } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/button'
 import { Container } from '@/components/shared/container'
+import { NAVIGATION } from '@/lib/constants/navigation'
 
 export const Navbar = () => {
   return (
     <nav className="sticky h-16 inset-x-0 top-0 z-50 w-full border-b border-border/40 bg-background/60 backdrop-blur-lg transition-all">
       <Container>
         <div className="flex h-16 items-center justify-between">
-          <Link href="/" className="flex z-40 items-center gap-2">
+          <Link href={NAVIGATION.home} className="flex z-40 items-center gap-2">
             <span className="font-brand text-2xl text-emerald-600">
               Well na Estrada
             </span>
@@ -16,7 +19,7 @@ export const Navbar = () => {
 
           <div className="hidden items-center space-x-4 sm:flex">
             <Link
-              href="#metodologia"
+              href={NAVIGATION.about}
               className={buttonVariants({
                 variant: 'ghost',
                 size: 'sm',
@@ -25,7 +28,7 @@ export const Navbar = () => {
               Metodologia
             </Link>
             <Link
-              href="#"
+              href={NAVIGATION.home}
               onClick={(e) => {
                 e.preventDefault()
                 window.scrollTo({ top: 0, behavior: 'smooth' })

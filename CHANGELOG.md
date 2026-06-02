@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Privacy Policy Page**:
+  - Created `src/app/politica-de-privacidade/page.tsx` with full compliance content (LGPD/GDPR).
+  - Integrated SEO metadata for the privacy page.
+- **Centralized Navigation**:
+  - Implemented `src/lib/constants/navigation.ts` to manage all project URLs in a single place.
 - **VSL Architectural Refactor**:
   - Replaced `react-player` with official YouTube IFrame Player API.
   - Created dedicated VSL feature module in `src/features/vsl`.
@@ -24,6 +29,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ### Changed
+- **Navigation Fixes & Audit**:
+  - Fixed broken links in Footer (Privacy Policy 404 and Application Form inaction).
+  - Implemented smooth scroll-to-top behavior for the application form link to trigger the Hero's VSL/Funnel context.
+  - Converted `Navbar` and `Footer` to Client Components to support interactive navigation handlers.
+  - Conducted full project audit to eliminate dead links (`#`, `javascript:void(0)`).
 - **Footer Redesign & Strategy Pivot**:
   - Removed all WhatsApp-first CTAs and direct "wa.me" links from the footer area.
   - Implemented a new professional `Footer` component with a premium "Stripe-like" aesthetic.
