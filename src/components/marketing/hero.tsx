@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, Lock, Sparkles } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
-import { VSLPlayer } from '@/features/vsl/vsl-player'
+import { VSLPlayer } from '@/features/vsl/components/vsl-player'
 import { Container } from '@/components/shared/container'
 import { Heading } from '@/components/shared/heading'
 import { CTAButton } from '@/components/shared/cta-button'
@@ -12,7 +12,6 @@ import { Button } from '@/components/ui/button'
 import { FunnelProvider } from '../funnel/funnel-context'
 import { FunnelModal } from '../funnel/funnel-modal'
 import { trackEvent } from '@/features/analytics/actions'
-import { VSL_CONFIG } from '@/features/vsl/constants'
 
 export const HeroContent = () => {
   const [isUnlocked, setIsUnlocked] = useState(false)
@@ -95,10 +94,7 @@ export const HeroContent = () => {
         transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
         className="mt-12 w-full max-w-5xl px-4"
       >
-        <VSLPlayer
-          videoUrl={VSL_CONFIG.youtubeUrl}
-          onUnlock={() => setIsUnlocked(true)}
-        />
+        <VSLPlayer onUnlock={() => setIsUnlocked(true)} />
       </motion.div>
 
       {/* CTA Section */}

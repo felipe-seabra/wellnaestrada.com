@@ -8,8 +8,12 @@ Premium creator-led platform for Irish exchange consultancy. Focus on high-conve
 ## Tech Stack
 - **Frontend:** Next.js 15 (App Router), React 19, TypeScript.
 - **Styling:** Tailwind CSS 4, Radix UI, Framer Motion.
+- **Video:** Official YouTube IFrame Player API (Native integration).
 - **Backend:** Supabase (PostgreSQL, SSR, Auth, Storage).
 - **Infrastructure:** Docker-based local development (Postgres, PostgREST).
+
+## Architectural Decisions
+- **VSL Implementation:** Use the official YouTube IFrame Player API directly. Avoid third-party player abstractions like `ReactPlayer` for better maintainability and control. Logic must be isolated in `src/features/vsl`.
 
 ## Core Conventions
 - **Server-First:** Prefer Server Components and Server Actions.

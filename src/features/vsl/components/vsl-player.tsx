@@ -1,28 +1,18 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import dynamic from 'next/dynamic'
 import { useInView } from 'framer-motion'
-import { useVideoTracking } from './use-video-tracking'
+import { useVideoTracking } from '../hooks/use-video-tracking'
 import { cn } from '@/lib/utils'
-
-// @ts-ignore - react-player/youtube types are tricky in some environments
-const ReactPlayer = dynamic<any>(() => import('react-player/youtube'), {
-  ssr: false,
-  loading: () => (
-    <div className="absolute inset-0 bg-zinc-900 animate-pulse rounded-2xl" />
-  ),
-})
+import { YouTubePlayer } from './youtube-player'
+import { VSL_VIDEO_CONFIG } from '../constants/video'
 
 interface VSLPlayerProps {
-  videoUrl: string
   onUnlock?: () => void
   className?: string
 }
 
-import { VSL_CONFIG } from './constants'
-
-export function VSLPlayer({ videoUrl, onUnlock, className }: VSLPlayerProps) {
+export function VSLPlayer({ onUnlock, className }: VSLPlayerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(true)
@@ -36,8 +26,8 @@ export function VSLPlayer({ videoUrl, onUnlock, className }: VSLPlayerProps) {
     handleProgress,
     handleEnded,
   } = useVideoTracking({
-    videoId: VSL_CONFIG.videoId,
-    unlockThreshold: VSL_CONFIG.unlockSeconds,
+    videoId: VSL_VIDEO_CONFIG.videoId,
+    unlockThreshold: VSL_VIDEO_CONFIG.unlockSeconds,
   })
 
   // Notify parent when unlocked
@@ -70,29 +60,15 @@ export function VSLPlayer({ videoUrl, onUnlock, className }: VSLPlayerProps) {
         className,
       )}
     >
-      <ReactPlayer
-        url={videoUrl}
-        width="100%"
-        height="100%"
+      <YouTubePlayer
+        videoId={VSL_VIDEO_CONFIG.videoId}
+        className="w-full h-full"
         playing={isPlaying}
         muted={isMuted}
-        playsinline
-        controls={hasInteracted} // Show controls only after first interaction
+        controls={hasInteracted}
         onPlay={handlePlay}
-        onProgress={(state: { playedSeconds: number }) =>
-          handleProgress(state.playedSeconds)
-        }
+        onProgress={handleProgress}
         onEnded={handleEnded}
-        config={{
-          youtube: {
-            playerVars: {
-              autoplay: 1,
-              modestbranding: 1,
-              rel: 0,
-              mute: 1,
-            },
-          },
-        }}
       />
 
       {/* Unmute Overlay */}

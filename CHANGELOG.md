@@ -6,11 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
-### Fixed
-- **VSL Loading Issue**:
-  - Replaced generic `react-player` import with specific `react-player/youtube` lazy-loaded component.
-  - Fixed "black screen" issue by ensuring correct YouTube URL handling and player initialization.
-  - Resolved "native player" fallback by improving provider detection.
+### Added
+- **VSL Architectural Refactor**:
+  - Replaced `react-player` with official YouTube IFrame Player API.
+  - Created dedicated VSL feature module in `src/features/vsl`.
+  - Implemented centralized video configuration and types.
+  - Isolated player logic from business/analytics tracking.
 
 ### Changed
 - **Architecture Refactor (Clean Architecture)**:

@@ -17,7 +17,7 @@
 - **Core Libraries:** 
   - Framer Motion (Premium motion & Viewport tracking).
   - React Hook Form + Zod (Funnel validation).
-  - ReactPlayer (Stable YouTube-specific lazy loading).
+  - YouTube IFrame API (Official player integration for VSL).
 - **Public Flow Strategy:** 
   - **Zero-JWT tracking**: Anonymous Supabase clients skip session persistence to prevent `JWSError`.
   - **VSL Experience:** Viewport-aware muted autoplay with explicit unmute control.
