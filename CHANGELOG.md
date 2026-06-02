@@ -24,6 +24,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ### Changed
+- **Footer Redesign & Strategy Pivot**:
+  - Removed all WhatsApp-first CTAs and direct "wa.me" links from the footer area.
+  - Implemented a new professional `Footer` component with a premium "Stripe-like" aesthetic.
+  - Shifted primary conversion focus to the qualification funnel/application form.
+  - Integrated Instagram and Email as the primary contact channels in the footer.
+  - Added professional legal sections and quick links for improved trust and navigation.
 - **Visual Identity Redesign**:
   - Introduced "Kaushan Script" as the primary brand font for a "brush/travel-oriented" aesthetic.
   - Redesigned the Hero branding to be significantly larger (up to `9xl` on desktop) for maximum visual impact.

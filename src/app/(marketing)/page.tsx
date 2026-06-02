@@ -7,6 +7,7 @@ import { Section } from '@/components/shared/section'
 import { Container } from '@/components/shared/container'
 import { Heading } from '@/components/shared/heading'
 import { StatCard } from '@/components/shared/stat-card'
+import { Footer } from '@/components/layout/footer'
 
 export default function Home() {
   const stats = [
@@ -135,27 +136,7 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* CTA Final */}
-      <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-emerald-600 -z-10"></div>
-        <Container className="text-center space-y-10">
-          <Heading level={2} className="text-white md:text-6xl">
-            Pronto para transformar sua realidade?
-          </Heading>
-          <p className="text-emerald-50 text-xl max-w-2xl mx-auto">
-            As vagas para a mentoria de 2024 estão abertas. Clique abaixo e
-            inicie sua jornada com segurança total.
-          </p>
-          <div className="flex justify-center">
-            <a
-              href="https://wa.me/353000000000"
-              className="bg-white text-emerald-600 px-10 py-5 rounded-full text-xl font-bold shadow-2xl hover:bg-zinc-100 transition-all active:scale-95"
-            >
-              Falar com o Well no WhatsApp
-            </a>
-          </div>
-        </Container>
-      </section>
+      <Footer />
     </div>
   )
 }
