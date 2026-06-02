@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
+### Fixed
+- **Analytics Dashboard (Critical Infrastructure Fix)**:
+  - Resolved "404 HTML" error in `AnalyticsService.getRecentActivity()` by fixing a port conflict between Next.js and PostgREST.
+  - Reconfigured PostgREST to use port `8000` (host) in `docker-compose.yml`, preventing it from competing with Next.js (port `3000`).
+  - Implemented a centralized `validateResponse` defensive check in `src/lib/supabase/error-handler.ts`.
+  - Updated all repositories (`AnalyticsRepository`, `LeadRepository`, `SettingsRepository`, `ContentRepository`) to use the new validation, ensuring HTML responses from misconfigurations are caught and reported as `InfrastructureError` instead of crashing with opaque HTML strings.
+  - Verified relationship between `analytics_events` and `leads` is correctly handled in recent activity queries.
+
 ### Added
 - **Architecture Refactor (Clean Architecture)**:
   - Implemented Repository and Service layers to decouple UI from data persistence.

@@ -1,28 +1,35 @@
 import { createClient } from '@/lib/supabase/server'
+import { validateResponse } from '@/lib/supabase/error-handler'
 
 export const SettingsRepository = {
   async getByKey(key: string) {
     const supabase = await createClient()
-    const { data, error } = await supabase
+    const response = await supabase
       .from('platform_settings')
       .select('value')
       .eq('key', key)
       .single()
 
-    if (error) return null
-    return data.value
+    validateResponse(response.error)
+
+    if (response.error) return null
+    return response.data.value
   },
 
   async getAll() {
     const supabase = await createClient()
-    return await supabase.from('platform_settings').select('*')
+    const response = await supabase.from('platform_settings').select('*')
+    validateResponse(response.error)
+    return response
   },
 
   async update(key: string, value: any) {
     const supabase = await createClient()
-    return await supabase
+    const response = await supabase
       .from('platform_settings')
       .update({ value, updated_at: new Date().toISOString() })
       .eq('key', key)
+    validateResponse(response.error)
+    return response
   },
 }

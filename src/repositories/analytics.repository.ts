@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { validateResponse } from '@/lib/supabase/error-handler'
 
 export interface AnalyticsEvent {
   id?: string
@@ -15,23 +16,29 @@ export interface AnalyticsEvent {
 export const AnalyticsRepository = {
   async create(event: AnalyticsEvent) {
     const supabase = await createClient()
-    return await supabase.from('analytics_events').insert(event)
+    const response = await supabase.from('analytics_events').insert(event)
+    validateResponse(response.error)
+    return response
   },
 
   async getStats() {
     const supabase = await createClient()
     // Basic stats for dashboard
-    const { count: totalLeads } = await supabase
+    const { count: totalLeads, error: totalError } = await supabase
       .from('leads')
       .select('*', { count: 'exact', head: true })
 
-    const { count: leadsToday } = await supabase
+    validateResponse(totalError)
+
+    const { count: leadsToday, error: todayError } = await supabase
       .from('leads')
       .select('*', { count: 'exact', head: true })
       .gte(
         'created_at',
         new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
       )
+
+    validateResponse(todayError)
 
     return {
       totalLeads: totalLeads || 0,
@@ -41,10 +48,13 @@ export const AnalyticsRepository = {
 
   async getRecentEvents(limit = 10) {
     const supabase = await createClient()
-    return await supabase
+    const response = await supabase
       .from('analytics_events')
       .select('*, leads(full_name)')
       .order('created_at', { ascending: false })
       .limit(limit)
+
+    validateResponse(response.error)
+    return response
   },
 }

@@ -28,7 +28,7 @@ services:
     container_name: well-api
     image: postgrest/postgrest:v12.0.2
     ports:
-      - '3000:3000'
+      - '8000:3000'
     environment:
       PGRST_DB_URI: postgres://postgres:postgres@well-db:5432/postgres
       PGRST_DB_SCHEMA: public
