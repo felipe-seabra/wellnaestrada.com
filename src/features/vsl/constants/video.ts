@@ -4,8 +4,6 @@ export const VSL_VIDEO_CONFIG: VideoConfig = {
   videoId: 'MBGdI_eRwIA',
   videoUrl: 'https://www.youtube.com/watch?v=MBGdI_eRwIA',
   unlockSeconds: 15,
-  orientation: 'portrait',
-  aspectRatio: '9/16',
   tracking: {
     impression: true,
     start: true,

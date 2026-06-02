@@ -23,8 +23,8 @@
   - **VSL Experience:** 
   - Viewport-aware muted autoplay with explicit unmute control.
   - Native YouTube IFrame API integration for maximum performance.
-  - Responsive `VideoWrapper` supporting both portrait (9:16) and landscape (16:9) orientations.
-  - Premium visual framing (glossy overlays, 2xl shadows, responsive sizing).
+  - Responsive `VideoWrapper` optimized for standard landscape (16:9) orientation.
+  - Premium visual framing (glossy overlays, 2xl shadows, max-width 5xl desktop).
 - **Infrastructure:** Dockerized environment (PostgreSQL 15, PostgREST, Adminer).
 
 ## 3. UX & Conversion Strategy (VSL Funnel)

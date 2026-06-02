@@ -13,10 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Implemented centralized video configuration and types.
   - Isolated player logic from business/analytics tracking.
 - **VSL Visual Improvements**:
-  - Implemented `VideoWrapper` for responsive orientation handling.
-  - Added support for portrait (9:16) video orientation to eliminate black bars.
-  - Enhanced visual framing with premium borders and glossy overlays.
-  - Optimized desktop, tablet, and mobile dimensions for maximum perceived quality.
+  - Implemented `VideoWrapper` for responsive handling in standard landscape (16:9) format.
+  - Enhanced visual framing with premium borders, glossy overlays, and 2xl shadows.
+  - Optimized desktop (max-width 5xl) and mobile (full-width) presentation.
+  - Fixed: Reverted portrait (9:16) implementation as source video is standard landscape.
 
 ### Changed
 - **Architecture Refactor (Clean Architecture)**:

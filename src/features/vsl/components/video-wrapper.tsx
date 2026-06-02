@@ -2,7 +2,6 @@
 
 import { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
-import { VSL_VIDEO_CONFIG } from '../constants/video'
 
 interface VideoWrapperProps {
   children: ReactNode
@@ -10,16 +9,11 @@ interface VideoWrapperProps {
 }
 
 export function VideoWrapper({ children, className }: VideoWrapperProps) {
-  const isPortrait = VSL_VIDEO_CONFIG.orientation === 'portrait'
-
   return (
     <div
       className={cn(
-        'relative mx-auto w-full overflow-hidden bg-zinc-950 shadow-2xl transition-all duration-500',
-        'rounded-2xl border border-white/5 ring-1 ring-white/10',
-        isPortrait
-          ? 'max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/16]'
-          : 'max-w-5xl aspect-video',
+        'relative mx-auto w-full max-w-5xl overflow-hidden bg-zinc-950 shadow-2xl transition-all duration-500',
+        'rounded-2xl border border-white/5 ring-1 ring-white/10 aspect-video',
         className,
       )}
     >

@@ -2,8 +2,6 @@ export interface VideoConfig {
   videoId: string
   videoUrl: string
   unlockSeconds: number
-  orientation: 'landscape' | 'portrait'
-  aspectRatio: string
   tracking: {
     impression: boolean
     start: boolean
