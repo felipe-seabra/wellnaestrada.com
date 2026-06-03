@@ -26,12 +26,34 @@ export const LeadRepository = {
     return response
   },
 
-  async findAll() {
+  async findAll(options?: {
+    search?: string
+    status?: string
+    limit?: number
+    offset?: number
+  }) {
     const supabase = await createClient()
-    const response = await supabase
+    let query = supabase
       .from('leads')
-      .select('*')
+      .select('*', { count: 'exact' })
       .order('created_at', { ascending: false })
+
+    if (options?.status && options.status !== 'all') {
+      query = query.eq('status', options.status)
+    }
+
+    if (options?.search) {
+      query = query.or(
+        `full_name.ilike.%${options.search}%,email.ilike.%${options.search}%`,
+      )
+    }
+
+    if (options?.limit) {
+      const offset = options.offset || 0
+      query = query.range(offset, offset + options.limit - 1)
+    }
+
+    const response = await query
     validateResponse(response.error)
     return response
   },

@@ -1,38 +1,39 @@
-import { SettingsRepository } from '@/repositories/settings.repository'
+import {
+  SettingsRepository,
+  SiteSettings,
+} from '@/repositories/settings.repository'
 
 export const SettingsService = {
-  async getBrandSettings() {
-    const brandName = await SettingsRepository.getByKey('brand_name')
-    const instagramUrl = await SettingsRepository.getByKey('instagram_url')
-    const contactEmail = await SettingsRepository.getByKey('contact_email')
+  async getSettings(): Promise<SiteSettings> {
+    return await SettingsRepository.get()
+  },
 
+  async updateSettings(settings: Partial<SiteSettings>) {
+    const { error } = await SettingsRepository.update(settings)
+    if (error) throw new Error(error.message)
+  },
+
+  /**
+   * Helper to get specific brand settings for public UI
+   */
+  async getBrandConfig() {
+    const settings = await this.getSettings()
     return {
-      brandName: brandName || 'Well na Estrada',
-      instagramUrl: instagramUrl || '#',
-      contactEmail: contactEmail || '',
+      brandName: 'Well na Estrada', // Hardcoded as per vision, or could be added to SiteSettings
+      instagramUrl: settings.instagram_url || '#',
+      contactEmail: settings.public_email || '',
+      copyrightText: settings.copyright_text || '',
     }
   },
 
+  /**
+   * Helper to get video config for VSL
+   */
   async getVideoConfig() {
-    const youtubeId = await SettingsRepository.getByKey('youtube_video_id')
-    const unlockSeconds = await SettingsRepository.getByKey(
-      'video_unlock_seconds',
-    )
-
+    const settings = await this.getSettings()
     return {
-      youtubeId: youtubeId || '',
-      unlockSeconds: Number(unlockSeconds) || 15,
+      youtubeId: settings.youtube_video_id || '',
+      unlockSeconds: Number(settings.cta_unlock_seconds) || 15,
     }
-  },
-
-  async updateSetting(key: string, value: any) {
-    const { error } = await SettingsRepository.update(key, value)
-    if (error) throw new Error(error.message)
-  },
-
-  async getAllSettings() {
-    const { data, error } = await SettingsRepository.getAll()
-    if (error) throw new Error(error.message)
-    return data
   },
 }

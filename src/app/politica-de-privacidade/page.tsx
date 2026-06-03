@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default async function PrivacyPolicyPage() {
   const [brandSettings, footerContent] = await Promise.all([
-    SettingsService.getBrandSettings(),
+    SettingsService.getBrandConfig(),
     ContentService.getFooterContent(),
   ])
 
@@ -153,6 +153,7 @@ export default async function PrivacyPolicyPage() {
         description={footerContent.description}
         instagramUrl={brandSettings.instagramUrl}
         contactEmail={brandSettings.contactEmail}
+        copyrightText={brandSettings.copyrightText}
       />
     </div>
   )

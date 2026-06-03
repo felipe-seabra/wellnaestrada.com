@@ -29,7 +29,7 @@ export async function createLead(input: LeadInput) {
       metadata: input.metadata || {},
     })
 
-    revalidatePath('/internal')
+    revalidatePath('/admin')
     return { success: true, data }
   } catch (error: any) {
     return { success: false, error: error.message }

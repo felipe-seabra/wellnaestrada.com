@@ -6,16 +6,53 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
+### Added
+- **Production Admin Platform (`/admin`)**:
+  - Implemented secure admin authentication using Supabase Auth (Email/Password).
+  - Added Next.js Middleware for route protection and session management.
+  - New Admin Login page (`/admin/login`) with error handling.
+  - Refactored Admin Dashboard into a dedicated route group for better layout management.
+- **Enterprise-Grade Settings Module**:
+  - Migrated from generic key-value settings to a strongly-typed `site_settings` flat table.
+  - Centralized management of Brand Identity (Social links, Emails, Copyright).
+  - Dynamic Video Configuration (YouTube ID, CTA unlock time).
+  - SEO & Metadata management (Title, Description, OG Image) directly from the dashboard.
+- **Advanced CRM & Lead Management**:
+  - Implemented search, filtering by status, and pagination in the Leads module.
+  - Added status update functionality (New, Contacted, Qualified, Converted, Lost) with optimistic updates.
+  - Enhanced Lead Repository and Service layer to support complex queries.
+- **Detailed Analytics & Funnel Tracking**:
+  - New Analytics dashboard with conversion funnel visualization.
+  - Tracking of Video Impressions, Starts, Unlocks, and Form conversion rates.
+  - Performance insights and benchmarks visualization.
+- **Dynamic Content Management**:
+  - Implemented UI for managing landing page copy (Hero, Storytelling, Footer) without code changes.
+
+### Changed
+- **Clean Architecture Enforcement**:
+  - Strict isolation between UI (Presentation), Actions (Orchestration), Services (Business Logic), and Repositories (Persistence).
+  - Components and Actions no longer communicate directly with Supabase.
+  - Refactored `SettingsService` and `ContentService` to provide reliable fallbacks and typed configurations.
+- **Routing & Infrastructure**:
+  - Renamed `/internal` to `/admin` for production consistency.
+  - Integrated Supabase SSR middleware for robust session handling.
+  - Optimized production build by removing stale cache and outdated type definitions.
+
+### Removed
+- Deprecated `/internal` routes and legacy key-value setting logic.
+- Empty directories (`src/hooks`, `src/features/vsl/constants`).
+- Stale debugging logs and abandoned implementations.
+
 ### Fixed
-- **Analytics Dashboard (Critical Infrastructure Fix)**:
-  - Resolved "404 HTML" error in `AnalyticsService.getRecentActivity()` by fixing a port conflict between Next.js and PostgREST.
-  - Reconfigured PostgREST to use port `8000` (host) in `docker-compose.yml`, preventing it from competing with Next.js (port `3000`).
-  - Implemented a centralized `validateResponse` defensive check in `src/lib/supabase/error-handler.ts`.
-  - Updated all repositories (`AnalyticsRepository`, `LeadRepository`, `SettingsRepository`, `ContentRepository`) to use the new validation, ensuring HTML responses from misconfigurations are caught and reported as `InfrastructureError` instead of crashing with opaque HTML strings.
-  - Verified relationship between `analytics_events` and `leads` is correctly handled in recent activity queries.
+- Resolved "404 HTML" error in `AnalyticsService.getRecentActivity()` by fixing a port conflict between Next.js and PostgREST.
+- Reconfigured PostgREST to use port `8000` (host) in `docker-compose.yml`, preventing it from competing with Next.js (port `3000`).
+- Implemented a centralized `validateResponse` defensive check in `src/lib/supabase/error-handler.ts`.
+- Updated all repositories (`AnalyticsRepository`, `LeadRepository`, `SettingsRepository`, `ContentRepository`) to use the new validation, ensuring HTML responses from misconfigurations are caught and reported as `InfrastructureError` instead of crashing with opaque HTML strings.
+- Verified relationship between `analytics_events` and `leads` is correctly handled in recent activity queries.
 
 ### Added
-- **Architecture Refactor (Clean Architecture)**:
+...
+
   - Implemented Repository and Service layers to decouple UI from data persistence.
   - Created `LeadRepository`, `SettingsRepository`, `ContentRepository`, and `AnalyticsRepository`.
   - Created `LeadsService`, `SettingsService`, `ContentService`, and `AnalyticsService`.

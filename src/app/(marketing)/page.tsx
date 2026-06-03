@@ -21,7 +21,7 @@ export default async function Home() {
     aboutContent,
     whyIrelandContent,
   ] = await Promise.all([
-    SettingsService.getBrandSettings(),
+    SettingsService.getBrandConfig(),
     SettingsService.getVideoConfig(),
     ContentService.getHeroContent(),
     ContentService.getFooterContent(),
@@ -149,6 +149,7 @@ export default async function Home() {
         description={footerContent.description}
         instagramUrl={brandSettings.instagramUrl}
         contactEmail={brandSettings.contactEmail}
+        copyrightText={brandSettings.copyrightText}
       />
     </div>
   )

@@ -23,7 +23,7 @@
 - **Tracking:** Detailed session, variant, and engagement analytics (video_impression, cta_unlock, lead_captured).
 
 ## 4. Admin Platform
-- **Dashboard:** Located at `/internal`.
+- **Dashboard:** Located at `/admin`.
 - **Leads:** CRM-style management of captured leads.
 - **Settings:** Management of Brand Identity (Name, Socials) and Video Configuration (YouTube ID, Unlock Time).
 - **Analytics:** High-level metrics and recent activity tracking.

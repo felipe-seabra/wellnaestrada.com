@@ -46,6 +46,43 @@ export const AnalyticsRepository = {
     }
   },
 
+  async getDetailedStats() {
+    const supabase = await createClient()
+
+    const { count: impressions } = await supabase
+      .from('analytics_events')
+      .select('*', { count: 'exact', head: true })
+      .eq('event_name', 'video_impression')
+
+    const { count: starts } = await supabase
+      .from('analytics_events')
+      .select('*', { count: 'exact', head: true })
+      .eq('event_name', 'video_start')
+
+    const { count: unlocks } = await supabase
+      .from('analytics_events')
+      .select('*', { count: 'exact', head: true })
+      .eq('event_name', 'cta_unlock')
+
+    const { count: formOpens } = await supabase
+      .from('analytics_events')
+      .select('*', { count: 'exact', head: true })
+      .eq('event_name', 'funnel_start')
+
+    const { count: leadCaptured } = await supabase
+      .from('analytics_events')
+      .select('*', { count: 'exact', head: true })
+      .eq('event_name', 'lead_captured')
+
+    return {
+      impressions: impressions || 0,
+      starts: starts || 0,
+      unlocks: unlocks || 0,
+      formOpens: formOpens || 0,
+      conversions: leadCaptured || 0,
+    }
+  },
+
   async getRecentEvents(limit = 10) {
     const supabase = await createClient()
     const response = await supabase

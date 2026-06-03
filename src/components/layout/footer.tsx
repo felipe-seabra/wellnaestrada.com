@@ -10,6 +10,7 @@ interface FooterProps {
   description: string
   instagramUrl: string
   contactEmail: string
+  copyrightText?: string
 }
 
 export const Footer = ({
@@ -17,6 +18,7 @@ export const Footer = ({
   description,
   instagramUrl,
   contactEmail,
+  copyrightText,
 }: FooterProps) => {
   const currentYear = new Date().getFullYear()
 
@@ -96,7 +98,8 @@ export const Footer = ({
         {/* Legal Bottom */}
         <div className="mt-16 pt-8 border-t border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-zinc-500">
           <p>
-            © {currentYear} {brandName}. Todos os direitos reservados.
+            {copyrightText ||
+              `© ${currentYear} ${brandName}. Todos os direitos reservados.`}
           </p>
           <p className="font-mono opacity-50 uppercase tracking-widest">
             IRL • BR

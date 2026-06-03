@@ -5,12 +5,15 @@ import {
 
 export const AnalyticsService = {
   async trackEvent(event: AnalyticsEvent) {
-    // Add logic to enrich event (e.g., user agent, IP if needed)
     return await AnalyticsRepository.create(event)
   },
 
   async getDashboardStats() {
     return await AnalyticsRepository.getStats()
+  },
+
+  async getDetailedStats() {
+    return await AnalyticsRepository.getDetailedStats()
   },
 
   async getRecentActivity() {
