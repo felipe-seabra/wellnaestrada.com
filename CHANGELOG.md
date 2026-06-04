@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Resilient Fallback Strategy**:
+  - Implemented a graceful fallback system to ensure the marketing website (`/` and `/politica-de-privacidade`) remains functional even if the database is offline or misconfigured.
+  - Created `src/config/default-settings.ts` and `src/config/default-content.ts` to store production-grade default values.
+  - Updated `SettingsService` and `ContentService` to catch infrastructure errors and return default values, preventing site crashes due to backend unavailability.
+  - Implemented smart error handling that re-throws Next.js internal dynamic errors (e.g., `DYNAMIC_SERVER_USAGE`) while suppressing persistence-related failures for public routes.
 - **Production Admin Platform (`/admin`)**:
   - Implemented secure admin authentication using Supabase Auth (Email/Password).
   - Added Next.js Middleware for route protection and session management.

@@ -4,6 +4,7 @@
 A premium Ireland exchange consultancy platform focused on a VSL-driven conversion funnel.
 
 ## Architecture
+- **Resilience:** Graceful fallback system for public routes. Site remains functional without DB using `DEFAULT_SETTINGS` and `DEFAULT_CONTENT`.
 - **Clean Architecture:** Strict separation between Services (Business), Repositories (Persistence), and UI (Presentation).
 - **Admin Dashboard:** `/admin` path, protected by Supabase Auth and Next.js Middleware.
 - **Dynamic Platform:** Managed via `site_settings` (flat table) and `platform_content` (section-based JSON).

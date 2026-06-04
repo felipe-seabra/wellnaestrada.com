@@ -16,6 +16,7 @@ Premium creator-led platform for Irish exchange consultancy. Focus on high-conve
 - **Clean Architecture:** Use Repository/Service pattern. Components must never query Supabase directly.
 - **Repository Layer (`src/repositories/`):** Dedicated to data persistence and external integrations.
 - **Service Layer (`src/services/`):** Dedicated to business logic and cross-domain orchestration.
+- **Resilience First:** Public marketing routes (`/`, `/politica-de-privacidade`) must always render using graceful fallbacks if the database is unavailable.
 - **Configuration-Driven:** All business content (copy, links, brand settings) must be managed in the database (`site_settings`, `platform_content`) and exposed via the `/admin` dashboard.
 - **Admin Dashboard:** Located at `/admin`. Protected by Supabase Auth and Middleware.
 - **VSL Implementation:** Use the official YouTube IFrame Player API directly. Logic must be isolated in `src/features/vsl`.
