@@ -1,6 +1,57 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+const SESSION_COOKIE = 'well_admin_session'
+const SESSION_SECRET =
+  process.env.PGRST_JWT_SECRET ||
+  'super-secret-jwt-token-change-me-in-production'
+
+/**
+ * Verifies the simple secure HMAC session token using Web Crypto API
+ * (Compatible with Edge Runtime)
+ */
+async function verifySessionToken(token: string | undefined): Promise<boolean> {
+  if (!token) return false
+
+  try {
+    const parts = token.split('.')
+    if (parts.length !== 2) return false
+
+    const [payload, signature] = parts
+
+    const encoder = new TextEncoder()
+    const keyData = encoder.encode(SESSION_SECRET)
+    const key = await crypto.subtle.importKey(
+      'raw',
+      keyData,
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['verify'],
+    )
+
+    const signatureBytes = new Uint8Array(
+      signature.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16)),
+    )
+
+    const isValid = await crypto.subtle.verify(
+      'HMAC',
+      key,
+      signatureBytes,
+      encoder.encode(payload),
+    )
+
+    if (!isValid) return false
+
+    const [, , timestamp] = payload.split(':')
+    const expirationTime = 60 * 60 * 24 * 1000 // 24 hours
+    if (Date.now() - Number(timestamp) > expirationTime) return false
+
+    return true
+  } catch (err) {
+    return false
+  }
+}
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -29,36 +80,30 @@ export async function updateSession(request: NextRequest) {
     },
   )
 
-  // IMPORTANT: Avoid writing any logic between createServerClient and
-  // supabase.auth.getUser(). A simple mistake can make it very hard to debug
-  // auth issues.
+  // 1. Try official Supabase Auth
+  let user = null
+  try {
+    const { data } = await supabase.auth.getUser()
+    user = data.user
+  } catch (err) {
+    // Fail silently, fallback to local session
+  }
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  // 2. Fallback to local session cookie if no Supabase user
+  const localSession = request.cookies.get(SESSION_COOKIE)?.value
+  const isLocalAuthenticated = await verifySessionToken(localSession)
+
+  const isAuthenticated = !!user || isLocalAuthenticated
 
   if (
-    !user &&
+    !isAuthenticated &&
     !request.nextUrl.pathname.startsWith('/admin/login') &&
     request.nextUrl.pathname.startsWith('/admin')
   ) {
-    // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone()
     url.pathname = '/admin/login'
     return NextResponse.redirect(url)
   }
-
-  // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
-  // creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object to fit your needs, but avoid changing
-  //    the cookies!
-  // 4. Finally: return myNewResponse
-  // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the user's session prematurely!
 
   return supabaseResponse
 }

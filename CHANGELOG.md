@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Local-First Authentication System**:
+  - Implemented a resilient authentication strategy that works in both full Supabase Cloud environments and local Docker setups (Postgres + PostgREST).
+  - Created `platform_admins` table for managing administrative users outside of the GoTrue/Supabase Auth service when running locally.
+  - Developed a custom secure session management using HMAC-signed cookies (SHA-256) compatible with Next.js Edge Runtime.
+  - Refactored `Admin Middleware` and `Login Actions` to support multi-provider authentication (Official Supabase Auth + Local DB Auth).
+  - Pre-seeded the first administrator account (`feliperoce@gmail.com`) via database migration.
 - **Resilient Fallback Strategy**:
   - Implemented a graceful fallback system to ensure the marketing website (`/` and `/politica-de-privacidade`) remains functional even if the database is offline or misconfigured.
   - Created `src/config/default-settings.ts` and `src/config/default-content.ts` to store production-grade default values.

@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
     "format": "prettier --write .",
+    "setup-admin": "node scripts/setup-admin.mjs",
     "prepare": "husky"
   },
   "lint-staged": {
