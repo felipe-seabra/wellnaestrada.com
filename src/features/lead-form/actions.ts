@@ -33,12 +33,20 @@ export async function createLead(input: LeadInput) {
     if (error) throw new Error(error.message)
 
     if (lead) {
-      await AnalyticsRepository.create({
-        event_name: 'lead_captured',
-        lead_id: lead.id,
-        session_id: lead.session_id,
-        payload: { source: lead.source },
-      })
+      try {
+        await AnalyticsRepository.create({
+          event_name: 'lead_captured',
+          lead_id: lead.id,
+          session_id: lead.session_id,
+          payload: { source: lead.source },
+        })
+      } catch (analyticsError) {
+        console.error(
+          '[Analytics Error] Failed to track lead capture:',
+          analyticsError,
+        )
+        // Fire and forget - do not fail the lead creation
+      }
     }
 
     revalidatePath('/admin')
