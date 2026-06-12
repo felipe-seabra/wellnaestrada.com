@@ -33,11 +33,17 @@ async function setup() {
     },
   })
 
-  const email = 'feliperoce@gmail.com'
-  const password = 'S996652976@'
+  const email = process.env.ADMIN_EMAIL || env.ADMIN_EMAIL
+  const password = process.env.ADMIN_PASSWORD || env.ADMIN_PASSWORD
 
-  console.log(`Creating user: ${email}...`)
+  if (!email || !password) {
+    console.error('Error: Missing ADMIN_EMAIL or ADMIN_PASSWORD in environment.')
+    process.exit(1)
+  }
 
+  console.log(`Processing user: ${email}...`)
+
+  // 1. Configure Supabase Cloud Auth
   const { data, error } = await supabase.auth.admin.createUser({
     email,
     password,
@@ -47,9 +53,7 @@ async function setup() {
 
   if (error) {
     if (error.message.includes('already registered')) {
-      console.log('User already exists. Updating password and confirming email...')
-      
-      // Find user by email
+      console.log('Supabase Auth: User already exists. Updating password...')
       const { data: users, error: listError } = await supabase.auth.admin.listUsers()
       if (listError) throw listError
       
@@ -61,16 +65,29 @@ async function setup() {
           user_metadata: { role: 'admin' }
         })
         if (updateError) throw updateError
-        console.log('User updated successfully!')
+        console.log('Supabase Auth: User updated successfully!')
       } else {
-        console.error('User not found despite "already registered" error.')
+        console.error('Supabase Auth: User not found despite "already registered" error.')
       }
     } else {
-      console.error('Error creating user:', error.message)
+      console.error('Supabase Auth: Error creating user:', error.message)
       process.exit(1)
     }
   } else {
-    console.log('User created successfully!')
+    console.log('Supabase Auth: User created successfully!')
+  }
+
+  // 2. Configure Local Fallback Auth (platform_admins)
+  console.log('Syncing credentials to local fallback table...')
+  const { error: rpcError } = await supabase.rpc('set_admin_credentials', {
+    p_email: email,
+    p_password: password
+  })
+
+  if (rpcError) {
+    console.error('Error syncing local fallback credentials:', rpcError.message)
+  } else {
+    console.log('Local fallback credentials synced successfully!')
   }
 
   console.log('\n--- Setup Complete ---')

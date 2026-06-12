@@ -10,7 +10,7 @@ A premium Ireland exchange consultancy platform focused on a VSL-driven conversi
 - **Dynamic Platform:** Managed via `site_settings` (flat table) and `platform_content` (section-based JSON).
 
 ## Tech Stack
-- Next.js 15 (App Router, Turbopack)
+- Next.js 16 (App Router)
 - React 19
 - Tailwind CSS 4
 - Supabase (PostgreSQL + Auth + SSR)

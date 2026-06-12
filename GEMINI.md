@@ -1,37 +1,9 @@
-# Well na Estrada - Project Instructions
+# Well na Estrada - Gemini Compatibility Stub
 
-This file serves as the primary guidance for the project's architecture, conventions, and workflows.
+> **Canonical instructions have moved to [`AGENTS.md`](./AGENTS.md).**
+>
+> This file exists solely for compatibility with tools that auto-read `GEMINI.md`.
+> Do not add new instructions here. All project rules, architecture decisions,
+> coding standards, and workflows are maintained in `AGENTS.md`.
 
-## Project Vision
-Premium creator-led platform for Irish exchange consultancy. Focus on high-conversion funnels and premium aesthetics.
-
-## Tech Stack
-- **Frontend:** Next.js 15 (App Router), React 19, TypeScript.
-- **Styling:** Tailwind CSS 4, Radix UI, Framer Motion.
-- **Video:** Official YouTube IFrame Player API (Native integration).
-- **Backend:** Supabase (PostgreSQL, SSR, Auth, Storage).
-- **Infrastructure:** Docker-based local development (Postgres, PostgREST).
-
-## Architectural Decisions
-- **Clean Architecture:** Use Repository/Service pattern. Components must never query Supabase directly.
-- **Repository Layer (`src/repositories/`):** Dedicated to data persistence and external integrations.
-- **Service Layer (`src/services/`):** Dedicated to business logic and cross-domain orchestration.
-- **Resilience First:** Public marketing routes (`/`, `/politica-de-privacidade`) must always render using graceful fallbacks if the database is unavailable.
-- **Configuration-Driven:** All business content (copy, links, brand settings) must be managed in the database (`site_settings`, `platform_content`) and exposed via the `/admin` dashboard.
-- **Admin Dashboard:** Located at `/admin`. Protected by Supabase Auth and Middleware.
-- **VSL Implementation:** Use the official YouTube IFrame Player API directly. Logic must be isolated in `src/features/vsl`.
-
-## Folder Structure
-- `src/app`: Routes and Layouts.
-- `src/services`: Business logic layer.
-- `src/repositories`: Data access layer.
-- `src/components/shared`: Reusable UI patterns.
-- `src/lib`: Utilities and Supabase clients.
-- `src/features`: Domain-specific components and hooks.
-
-## Deployment Safety
-Always run:
-1. `npm run lint`
-2. `npm run type-check`
-3. `npm run build`
-4. `npm audit`
+See [AGENTS.md](./AGENTS.md) for the full project instructions.

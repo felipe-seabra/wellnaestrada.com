@@ -2,7 +2,7 @@
 
 ## Application Structure
 
-The application is built using Next.js 15 App Router, focusing on a separation of concerns between server components, client components, and modular feature logic.
+The application is built using Next.js 16 App Router, focusing on a separation of concerns between server components, client components, and modular feature logic.
 
 ### Folder Structure Strategy
 
@@ -35,3 +35,4 @@ src/
 3.  **Shared UI Patterns:** Use `components/shared/` to enforce visual consistency and reduce layout duplication across the marketing site and funnel.
 4.  **Centralized Validation:** All data validation logic (Zod) resides in `lib/validations/`, ensuring consistent rules across the client and server.
 5.  **Secure Public Tracking:** Use anonymous Supabase clients for public interactions to avoid session-related errors (`JWSError`) on the landing page.
+6.  **Dual-Mode Authentication:** The `/admin` routes are protected by a hybrid auth system (Supabase native Auth + local HMAC cookie fallback) implemented in Next.js Middleware.

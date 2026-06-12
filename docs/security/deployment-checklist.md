@@ -10,7 +10,6 @@ This checklist must be completed and verified before ANY production deployment.
 ## 2. Code Quality & Standards
 - [ ] `npm run lint` passes without errors.
 - [ ] `npm run type-check` passes without errors.
-- [ ] `npm run format` has been executed.
 
 ## 3. Build & Performance
 - [ ] `npm run build` completes successfully.
@@ -25,5 +24,5 @@ This checklist must be completed and verified before ANY production deployment.
 
 ## 5. Documentation
 - [ ] `CHANGELOG.md` updated with the new release info.
-- [ ] `GEMINI.md` updated with any architectural changes.
+- [ ] `AGENTS.md` updated with any architectural changes.
 - [ ] `docs/security/security-audit.md` updated with the latest results.

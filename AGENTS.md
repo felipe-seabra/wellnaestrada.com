@@ -1,0 +1,110 @@
+# Well na Estrada — Project Instructions
+
+This file is the **single source of truth** for all AI agents and human developers working on this project.
+
+## 1. Project Vision
+
+**Well na Estrada** is a premium creator-led platform for Ireland exchange consultancy.
+
+- **Goal:** Drive premium lead conversion through a trust-building VSL funnel.
+- **Conversion Flow:** VSL Video → Delayed CTA (Dynamic unlock) → Multi-step Onboarding Form → SQL Lead Storage.
+- **Aesthetic:** Cinematic, premium, emotionally strong (Emerald palette + Script branding).
+
+## 2. Tech Stack
+
+- **Frontend:** Next.js 16 (App Router), React 19, TypeScript.
+- **Styling:** Tailwind CSS 4, shadcn/ui (Radix UI), Framer Motion.
+- **Video:** Official YouTube IFrame Player API (Native integration).
+- **Backend:** Supabase (PostgreSQL, SSR, Auth, Storage).
+- **State Management:** React Hook Form + Zod; URL state; Server Components for data fetching.
+- **Infrastructure:** Docker-based local development (Postgres, PostgREST, Adminer).
+
+## 3. Architecture
+
+### Principles
+
+- **Clean Architecture:** Use Repository/Service pattern. Components must never query Supabase directly.
+- **Repository Layer (`src/repositories/`):** Dedicated to data persistence and external integrations. Isolates Supabase/DB from the rest of the app.
+- **Service Layer (`src/services/`):** Dedicated to business logic and cross-domain orchestration. Mandatory layer for all business rules.
+- **Resilience First:** Public marketing routes (`/`, `/politica-de-privacidade`) must always render using graceful fallbacks if the database is unavailable.
+- **Configuration-Driven:** All business content (copy, links, brand settings) must be managed in the database (`site_settings`, `platform_content`) and exposed via the `/admin` dashboard. No hardcoded marketing strings in the frontend.
+- **Server-First Rendering:** Use Server Components by default. Interactivity is delegated to specialized Client Components.
+
+### Folder Structure
+
+- `src/app`: Routes and Layouts (Next.js App Router).
+- `src/services`: Business logic layer.
+- `src/repositories`: Data access layer.
+- `src/components/shared`: Reusable UI patterns (Section, Container, Heading, CTAButton, StatCard).
+- `src/components/ui`: Generic UI primitives (Radix/Shadcn).
+- `src/components/marketing`: Marketing-specific sections.
+- `src/components/funnel`: Funnel step components.
+- `src/components/layout`: Global layouts (Navbar, Footer).
+- `src/lib`: Utilities, Supabase clients, constants, validations.
+- `src/features`: Domain-specific components, hooks, and actions (vsl, lead-form, analytics).
+- `src/config`: Fallback defaults for resilience.
+
+### Key Modules
+
+- **VSL Funnel:** User watches a configurable amount of VSL to unlock the "Iniciar Planejamento" button. Logic isolated in `src/features/vsl`. Uses the official YouTube IFrame Player API directly.
+- **Lead Onboarding:** 7-step flow (Name, Email, WhatsApp, Current Moment, Financials, Goal, Confirmation). Local draft recovery via localStorage.
+- **CRM:** Lead management with status tracking (new, contacted, qualified, converted, lost), search, and filtering.
+- **Analytics:** Funnel metrics tracking (video_impression, video_start, cta_unlock, funnel_start, lead_captured). Session, variant, and engagement tracking.
+- **Content Management:** Real-time editing of Hero, About, Why Ireland, and Footer sections via Admin Dashboard.
+
+### Admin Platform
+
+- **Dashboard:** Located at `/admin`. Protected by Supabase Auth and Next.js Middleware.
+- **Leads:** CRM-style management of captured leads.
+- **Settings:** Management of Brand Identity (Socials, Email) and Video Configuration (YouTube ID, Unlock Time).
+- **Analytics:** High-level metrics and recent activity tracking.
+- **Content:** Section-based content editing for the marketing landing page.
+
+## 4. Coding Standards
+
+- **TypeScript:** Strict mode. No `any`. Use `unknown` for untyped data and narrow with type guards. Use `Record<string, unknown>` instead of `Record<string, any>`.
+- **Components:** Functional components only. Keep them small and focused.
+- **Naming:**
+  - PascalCase for components and types.
+  - camelCase for hooks, variables, and functions.
+  - kebab-case for file names.
+- **Validation:** All data validation logic (Zod) resides in `src/lib/validations/`.
+- **Error Handling:** Never silently swallow errors. Log meaningful context. Re-throw Next.js dynamic errors (`DYNAMIC_SERVER_USAGE`).
+
+## 5. Forbidden Patterns
+
+- No `any` type annotations.
+- No Prop Drilling.
+- No inline styles.
+- No client-side secrets exposure.
+- No unnecessary `useEffect`.
+- No hardcoded credentials in migrations or scripts.
+- No direct Supabase queries from components — always go through Services/Repositories.
+
+## 6. Communication Rules
+
+- **Conversational Responses:** Brazilian Portuguese.
+- **Code, Documentation, and Commits:** English.
+- **Commit Style:** Conventional Commits (enforced by commitlint + Husky).
+
+## 7. Deployment Safety
+
+Always run before any deployment:
+
+1. `npm run lint`
+2. `npm run type-check`
+3. `npm run build`
+4. `npm audit`
+
+See `docs/security/deployment-checklist.md` for the full pre-deployment checklist.
+
+## 8. Roadmap
+
+- [x] Tech stack & Docker setup.
+- [x] VSL Conversion Strategy.
+- [x] Lead Funnel & Analytics implementation.
+- [x] Cinematic Lifestyle & Branding integration.
+- [x] Clean Architecture Refactor (Services/Repositories).
+- [x] Expanded Admin Dashboard (Leads, Analytics, Settings).
+- [ ] Advanced Filters for Leads.
+- [ ] Content Management UI for all landing sections.

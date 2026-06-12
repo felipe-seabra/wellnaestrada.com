@@ -11,9 +11,8 @@
 The project is using modern versions of core dependencies (Next.js 16, React 19), but some dev dependencies are trailing behind.
 
 ### Major Updates Required
-- `@rocketseat/eslint-config`: 2.2.2 -> 3.0.12 (High Priority - Security)
+- `@rocketseat/eslint-config`: 2.2.2 -> 3.0.12 (Resolved: Updated to `3.0.12`)
 
 ## Recommendations
-1. Update `@rocketseat/eslint-config` immediately to resolve most high-severity vulnerabilities.
-2. Ensure `postcss` is updated to at least `8.5.10` to mitigate XSS risks.
+1. Maintain updated versions of `eslint-config` and `postcss` (>=8.5.10) to mitigate vulnerabilities.
 3. Monitor `shadcn` updates for any component-level vulnerabilities.

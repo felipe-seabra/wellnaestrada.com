@@ -23,7 +23,7 @@ docker compose up -d
 Isso iniciará:
 
 - **well-db**: PostgreSQL 15 (Porta `54322`)
-- **well-api**: PostgREST API (Porta `3000`)
+- **well-api**: PostgREST API (Porta `8000`)
 - **well-adminer**: Painel de Gerenciamento de DB (Porta `8080`)
 
 ### 3. Aplicação (Next.js)
@@ -68,6 +68,8 @@ supabase start
 
 O banco de dados já vem pré-configurado com:
 
+- **site_settings**: Configurações globais (marca, redes sociais, links).
+- **platform_content**: Conteúdo dinâmico das seções da landing page.
 - **leads**: CRM inicial e captura de conversão.
 - **analytics_events**: Rastreamento de comportamento do usuário.
 

@@ -28,11 +28,12 @@ A landing page foi estruturada para mover o usuário através de 4 estados emoci
   - Corpo: Sans-serif limpa (ex: Inter ou Geist) para legibilidade.
 - **Imagens:** Priorizar fotos reais de lifestyle na Irlanda. Evitar "stock photos" genéricas de pessoas sorrindo em estúdio.
 
-## 4. Estratégia de WhatsApp
+## 4. Estratégia de Onboarding (Lead Funnel)
 
-O CTA não deve ser "Falar com vendas", mas sim "Iniciar planejamento" ou "Consultoria gratuita".
+O CTA não deve direcionar imediatamente para o WhatsApp. Em vez disso, inicia um funil de qualificação de 7 passos (Lead Onboarding).
 
-- **Primeira Mensagem:** "Olá Well! Vi o site e quero planejar meu próximo capítulo na Irlanda. Como funciona a mentoria?"
+- **Fluxo:** Nome -> Email -> WhatsApp -> Momento Atual -> Financeiro -> Objetivo -> Confirmação.
+- **Objetivo:** Qualificar o lead, salvar no banco de dados e só então direcionar para o WhatsApp com a mensagem pré-configurada. Isso aumenta a autoridade e filtra curiosos.
 
 ## 5. Próximos Passos de Implementação
 
