@@ -24,6 +24,15 @@ The local session token is a simple HMAC-signed string verified using the Web Cr
 - **Production Rules:** In production environments, it is critical that `PGRST_JWT_SECRET` is strong, unique, and strictly kept secret.
 - **Edge Compatibility:** The use of `crypto.subtle` instead of Node's `crypto` module ensures the middleware executes fast and without errors on Edge environments like Vercel.
 
+## Database Clients & Authorization
+
+To securely map authentication states to database queries, we enforce the use of strict, scoped clients provided by `src/lib/supabase/server.ts`:
+
+1. **`createClient(options)`**: The standard client. Inherits the user's cookie context. If the user is unauthenticated or using the local Fallback Auth (which doesn't generate a native database JWT), it executes queries as the `anon` role, adhering to Row Level Security (RLS) policies.
+2. **`createAdminClient()`**: A privileged client utilizing `SUPABASE_SERVICE_ROLE_KEY`. It completely bypasses RLS. To prevent accidental exposure:
+   - It is protected by the `server-only` package, which throws an error if imported into Client Components.
+   - It should strictly be used within Next.js Server Actions and API Routes to handle admin tasks (e.g., updating `site_settings`).
+
 ## Administrator Setup
 
 Administrators are provisioned via the `scripts/setup-admin.mjs` utility, which securely syncs credentials to both Supabase Auth and the local fallback `platform_admins` table.

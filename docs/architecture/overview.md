@@ -35,4 +35,5 @@ src/
 3.  **Shared UI Patterns:** Use `components/shared/` to enforce visual consistency and reduce layout duplication across the marketing site and funnel.
 4.  **Centralized Validation:** All data validation logic (Zod) resides in `lib/validations/`, ensuring consistent rules across the client and server.
 5.  **Secure Public Tracking:** Use anonymous Supabase clients for public interactions to avoid session-related errors (`JWSError`) on the landing page.
-6.  **Dual-Mode Authentication:** The `/admin` routes are protected by a hybrid auth system (Supabase native Auth + local HMAC cookie fallback) implemented in Next.js Middleware.
+6.  **Admin Privileged Writes:** Use `createAdminClient()` (secured by `server-only`) inside Server Actions for privileged database updates (like CRM mutations and `site_settings`) to bypass RLS securely.
+7.  **Dual-Mode Authentication:** The `/admin` routes are protected by a hybrid auth system (Supabase native Auth + local HMAC cookie fallback) implemented in Next.js Middleware.

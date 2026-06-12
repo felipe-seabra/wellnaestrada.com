@@ -76,7 +76,8 @@ This file is the **single source of truth** for all AI agents and human develope
 - No `any` type annotations.
 - No Prop Drilling.
 - No inline styles.
-- No client-side secrets exposure.
+- No client-side secrets exposure (never prefix Service Role Keys with `NEXT_PUBLIC_`).
+- No direct usage of `createAdminClient()` or `SUPABASE_SERVICE_ROLE_KEY` inside Client Components.
 - No unnecessary `useEffect`.
 - No hardcoded credentials in migrations or scripts.
 - No direct Supabase queries from components — always go through Services/Repositories.
