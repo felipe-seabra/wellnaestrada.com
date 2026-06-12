@@ -37,28 +37,25 @@ export const SettingsService = {
   },
 
   /**
-   * Helper to get specific brand settings for public UI
+   * Helper to get specific grouped settings for public UI
    */
-  async getBrandConfig() {
+  async getMappedSettings() {
     const settings = await this.getSettings()
     return {
-      brandName: DEFAULT_SETTINGS.brandName,
-      instagramUrl: settings.instagram_url || DEFAULT_SETTINGS.instagram_url,
-      contactEmail: settings.public_email || DEFAULT_SETTINGS.public_email,
-      copyrightText: settings.copyright_text || DEFAULT_SETTINGS.copyright_text,
-    }
-  },
-
-  /**
-   * Helper to get video config for VSL
-   */
-  async getVideoConfig() {
-    const settings = await this.getSettings()
-    return {
-      youtubeId: settings.youtube_video_id || DEFAULT_SETTINGS.youtube_video_id,
-      unlockSeconds:
-        Number(settings.cta_unlock_seconds) ||
-        DEFAULT_SETTINGS.cta_unlock_seconds,
+      brandSettings: {
+        brandName: DEFAULT_SETTINGS.brandName,
+        instagramUrl: settings.instagram_url || DEFAULT_SETTINGS.instagram_url,
+        contactEmail: settings.public_email || DEFAULT_SETTINGS.public_email,
+        copyrightText:
+          settings.copyright_text || DEFAULT_SETTINGS.copyright_text,
+      },
+      videoConfig: {
+        youtubeId:
+          settings.youtube_video_id || DEFAULT_SETTINGS.youtube_video_id,
+        unlockSeconds:
+          Number(settings.cta_unlock_seconds) ||
+          DEFAULT_SETTINGS.cta_unlock_seconds,
+      },
     }
   },
 }

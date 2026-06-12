@@ -13,9 +13,9 @@ export const metadata: Metadata = {
 }
 
 export default async function PrivacyPolicyPage() {
-  const [brandSettings, footerContent] = await Promise.all([
-    SettingsService.getBrandConfig(),
-    ContentService.getFooterContent(),
+  const [{ brandSettings }, { footer: footerContent }] = await Promise.all([
+    SettingsService.getMappedSettings(),
+    ContentService.getAllContentSafe(),
   ])
 
   const lastUpdate = '02 de Junho de 2026'

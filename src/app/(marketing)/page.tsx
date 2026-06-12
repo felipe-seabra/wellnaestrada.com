@@ -14,19 +14,16 @@ import { ContentService } from '@/services/content.service'
 
 export default async function Home() {
   const [
-    brandSettings,
-    videoConfig,
-    heroContent,
-    footerContent,
-    aboutContent,
-    whyIrelandContent,
+    { brandSettings, videoConfig },
+    {
+      hero: heroContent,
+      footer: footerContent,
+      about: aboutContent,
+      whyIreland: whyIrelandContent,
+    },
   ] = await Promise.all([
-    SettingsService.getBrandConfig(),
-    SettingsService.getVideoConfig(),
-    ContentService.getHeroContent(),
-    ContentService.getFooterContent(),
-    ContentService.getAboutContent(),
-    ContentService.getWhyIrelandContent(),
+    SettingsService.getMappedSettings(),
+    ContentService.getAllContentSafe(),
   ])
 
   const stats = [

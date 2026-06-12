@@ -6,12 +6,8 @@ import {
 } from './content-forms'
 
 export default async function AdminContent() {
-  const [hero, footer, about, whyIreland] = await Promise.all([
-    ContentService.getHeroContent(),
-    ContentService.getFooterContent(),
-    ContentService.getAboutContent(),
-    ContentService.getWhyIrelandContent(),
-  ])
+  const { hero, footer, about, whyIreland } =
+    await ContentService.getAllContentSafe()
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-12">

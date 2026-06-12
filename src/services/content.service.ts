@@ -8,56 +8,31 @@ const isDynamicError = (err: unknown) =>
 
 export const ContentService = {
   /**
-   * Safe fetch for content sections with fallback
+   * Safe fetch for all content sections with in-memory mapping and fallbacks
    */
-  async getSafeContent(section: string, fallback: any) {
+  async getAllContentSafe() {
+    let map: Record<string, any> = {}
     try {
-      const content = await ContentRepository.getBySection(section)
-      return content || fallback
+      const { data } = await ContentRepository.getAll()
+      if (data) {
+        map = data.reduce((acc: any, curr: any) => {
+          acc[curr.section] = curr.content
+          return acc
+        }, {})
+      }
     } catch (error) {
       if (isDynamicError(error)) throw error
       console.error(
-        `[ContentService] Failed to fetch section "${section}", using fallback:`,
+        '[ContentService] Failed to fetch all content, using fallbacks:',
         error,
       )
-      return fallback
     }
-  },
 
-  async getHeroContent() {
-    const hero = await this.getSafeContent('hero', DEFAULT_CONTENT.hero)
     return {
-      title: hero.title,
-      subtitle: hero.subtitle,
-    }
-  },
-
-  async getFooterContent() {
-    const footer = await this.getSafeContent('footer', DEFAULT_CONTENT.footer)
-    return {
-      description: footer.description,
-    }
-  },
-
-  async getAboutContent() {
-    const about = await this.getSafeContent('about', DEFAULT_CONTENT.about)
-    return {
-      title: about.title,
-      p1: about.p1,
-      p2: about.p2,
-      quote: about.quote,
-    }
-  },
-
-  async getWhyIrelandContent() {
-    const why = await this.getSafeContent(
-      'why_ireland',
-      DEFAULT_CONTENT.why_ireland,
-    )
-    return {
-      title: why.title,
-      subtitle: why.subtitle,
-      items: why.items,
+      hero: { ...DEFAULT_CONTENT.hero, ...map.hero },
+      footer: { ...DEFAULT_CONTENT.footer, ...map.footer },
+      about: { ...DEFAULT_CONTENT.about, ...map.about },
+      whyIreland: { ...DEFAULT_CONTENT.why_ireland, ...map.why_ireland },
     }
   },
 
