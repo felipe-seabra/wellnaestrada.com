@@ -1,6 +1,7 @@
 'use server'
 
-import { LeadsService } from '@/services/leads.service'
+import { LeadRepository } from '@/repositories/lead.repository'
+import { AnalyticsRepository } from '@/repositories/analytics.repository'
 import { revalidatePath } from 'next/cache'
 
 export type LeadInput = {
@@ -17,7 +18,7 @@ export type LeadInput = {
 
 export async function createLead(input: LeadInput) {
   try {
-    const data = await LeadsService.createLead({
+    const { data: lead, error } = await LeadRepository.create({
       full_name: input.full_name,
       email: input.email,
       phone: input.phone,
@@ -29,8 +30,19 @@ export async function createLead(input: LeadInput) {
       metadata: input.metadata || {},
     })
 
+    if (error) throw new Error(error.message)
+
+    if (lead) {
+      await AnalyticsRepository.create({
+        event_name: 'lead_captured',
+        lead_id: lead.id,
+        session_id: lead.session_id,
+        payload: { source: lead.source },
+      })
+    }
+
     revalidatePath('/admin')
-    return { success: true, data }
+    return { success: true, data: lead }
   } catch (error: any) {
     return { success: false, error: error.message }
   }

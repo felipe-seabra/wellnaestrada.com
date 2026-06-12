@@ -1,4 +1,4 @@
-import { LeadsService } from '@/services/leads.service'
+import { LeadRepository } from '@/repositories/lead.repository'
 import { updateLeadStatus } from './actions'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -14,11 +14,21 @@ export default async function AdminLeads(props: {
   const status = searchParams.status
   const page = Number(searchParams.page) || 1
 
-  const { leads, total, totalPages } = await LeadsService.getAllLeads({
+  const limit = 20
+  const offset = (page - 1) * limit
+
+  const { data, count, error } = await LeadRepository.findAll({
     search: q,
     status,
-    page,
+    limit,
+    offset,
   })
+
+  if (error) throw new Error(error.message)
+
+  const leads = data || []
+  const total = count || 0
+  const totalPages = Math.ceil(total / limit)
 
   const statusOptions = [
     { label: 'Todos', value: 'all' },
