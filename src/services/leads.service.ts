@@ -1,5 +1,5 @@
 import { LeadRepository, Lead } from '@/repositories/lead.repository'
-import { AnalyticsService } from './analytics.service'
+import { AnalyticsRepository } from '@/repositories/analytics.repository'
 
 export const LeadsService = {
   async createLead(leadData: Lead) {
@@ -7,7 +7,7 @@ export const LeadsService = {
     if (error) throw new Error(error.message)
 
     if (lead) {
-      await AnalyticsService.trackEvent({
+      await AnalyticsRepository.create({
         event_name: 'lead_captured',
         lead_id: lead.id,
         session_id: lead.session_id,

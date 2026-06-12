@@ -1,6 +1,6 @@
 'use server'
 
-import { AnalyticsService } from '@/services/analytics.service'
+import { AnalyticsRepository } from '@/repositories/analytics.repository'
 
 export type AnalyticsEventInput = {
   event_name: string
@@ -14,7 +14,7 @@ export type AnalyticsEventInput = {
 
 export async function trackEvent(input: AnalyticsEventInput) {
   try {
-    const { error } = await AnalyticsService.trackEvent({
+    const { error } = await AnalyticsRepository.create({
       event_name: input.event_name,
       url: input.url,
       payload: input.payload || {},

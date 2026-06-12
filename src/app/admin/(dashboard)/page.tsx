@@ -1,10 +1,10 @@
-import { AnalyticsService } from '@/services/analytics.service'
+import { AnalyticsRepository } from '@/repositories/analytics.repository'
 import { Card } from '@/components/ui/card'
 import { TrendingUp, Users, PlayCircle, MousePointer2 } from 'lucide-react'
 
 export default async function AdminDashboard() {
-  const stats = await AnalyticsService.getDashboardStats()
-  const recentActivity = await AnalyticsService.getRecentActivity()
+  const stats = await AnalyticsRepository.getStats()
+  const { data: recentActivity } = await AnalyticsRepository.getRecentEvents()
 
   const metrics = [
     {

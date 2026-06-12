@@ -1,4 +1,4 @@
-import { AnalyticsService } from '@/services/analytics.service'
+import { AnalyticsRepository } from '@/repositories/analytics.repository'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -12,7 +12,7 @@ import {
 import { StatCard } from '@/components/shared/stat-card'
 
 export default async function AdminAnalytics() {
-  const stats = await AnalyticsService.getDetailedStats()
+  const stats = await AnalyticsRepository.getDetailedStats()
 
   const funnelSteps = [
     {

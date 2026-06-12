@@ -25,7 +25,7 @@ This file is the **single source of truth** for all AI agents and human develope
 
 - **Clean Architecture:** Use Repository/Service pattern. Components must never query Supabase directly.
 - **Repository Layer (`src/repositories/`):** Dedicated to data persistence and external integrations. Isolates Supabase/DB from the rest of the app.
-- **Service Layer (`src/services/`):** Dedicated to business logic and cross-domain orchestration. Mandatory layer for all business rules.
+- **Service Layer (`src/services/`):** Dedicated to business logic, fallbacks, and cross-domain orchestration. Do not create pure pass-through services; components and actions may call Repositories directly if no business logic is required.
 - **Resilience First:** Public marketing routes (`/`, `/politica-de-privacidade`) must always render using graceful fallbacks if the database is unavailable.
 - **Configuration-Driven:** All business content (copy, links, brand settings) must be managed in the database (`site_settings`, `platform_content`) and exposed via the `/admin` dashboard. No hardcoded marketing strings in the frontend.
 - **Server-First Rendering:** Use Server Components by default. Interactivity is delegated to specialized Client Components.
