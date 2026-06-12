@@ -21,4 +21,8 @@ export function validateResponse(error: any) {
         'This typically indicates a misconfigured Supabase URL or a port conflict (e.g., hitting the Next.js dev server instead of the API).',
     )
   }
+
+  // Lançar o erro real do Supabase para que o Service e o console não falhem silenciosamente
+  console.error('[Supabase DB Error]', error)
+  throw new Error(error.message || JSON.stringify(error))
 }

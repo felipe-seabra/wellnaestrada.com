@@ -9,6 +9,16 @@ export function createClient() {
         persistSession: false,
         detectSessionInUrl: false,
       },
+      global: {
+        fetch: (url, options) => {
+          if (typeof url === 'string' && url.includes('/rest/v1/')) {
+            url = url.replace('/rest/v1/', '/')
+          } else if (url instanceof URL && url.pathname.includes('/rest/v1/')) {
+            url.pathname = url.pathname.replace('/rest/v1/', '/')
+          }
+          return fetch(url, options)
+        },
+      },
     },
   )
 }

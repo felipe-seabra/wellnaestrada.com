@@ -29,10 +29,10 @@ BEGIN
     INSERT INTO public.platform_admins (email, password_hash)
     VALUES (
         p_email,
-        crypt(p_password, gen_salt('bf'))
+        extensions.crypt(p_password, extensions.gen_salt('bf'))
     )
     ON CONFLICT (email) DO UPDATE 
-    SET password_hash = crypt(p_password, gen_salt('bf'));
+    SET password_hash = extensions.crypt(p_password, extensions.gen_salt('bf'));
 END;
 $$;
 
@@ -51,6 +51,6 @@ BEGIN
     SELECT id, email, role
     FROM public.platform_admins
     WHERE email = p_email
-    AND password_hash = crypt(p_password, password_hash);
+    AND password_hash = extensions.crypt(p_password, password_hash);
 END;
 $$;

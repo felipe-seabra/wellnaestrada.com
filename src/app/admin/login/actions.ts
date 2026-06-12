@@ -40,10 +40,10 @@ export async function login(formData: FormData) {
       return
     }
 
-    // If it's a real Auth error (wrong pass), we stop here
-    if (error && !error.message.includes('fetch failed')) {
-      redirect('/admin/login?error=Invalid credentials')
-      return
+    // If Gotrue fails (whether due to being offline or invalid credentials),
+    // we just fall through to try the local DB fallback auth.
+    if (error) {
+      console.log('[Login] Cloud Auth failed, attempting local fallback...')
     }
   } catch (err) {
     // Continue to local fallback if fetch fails

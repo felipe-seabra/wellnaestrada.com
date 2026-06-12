@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { validateResponse } from '@/lib/supabase/error-handler'
 
 export interface SiteSettings {
@@ -29,7 +29,7 @@ export const SettingsRepository = {
   },
 
   async update(settings: Partial<SiteSettings>) {
-    const supabase = await createClient()
+    const supabase = await createAdminClient()
     // We update the first row as there's only one
     const { data: current } = await supabase
       .from('site_settings')
