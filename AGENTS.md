@@ -47,7 +47,11 @@ This file is the **single source of truth** for all AI agents and human develope
 ### Key Modules
 
 - **VSL Funnel:** User watches a configurable amount of VSL to unlock the "Iniciar Planejamento" button. Logic isolated in `src/features/vsl`. Uses the official YouTube IFrame Player API directly.
-- **Lead Onboarding:** 7-step flow (Name, Email, WhatsApp, Current Moment, Financials, Goal, Confirmation). Local draft recovery via localStorage.
+- **Lead Onboarding (Dynamic Funnel):** Configuration-driven multi-step flow rendered via `DynamicFunnelStep`.
+  - Configured via an array in `src/components/funnel/config.ts`.
+  - Step types: `text-input` (auto-focuses input), `choice-cards` (auto-advances 300ms after selection), `textarea-submit` (submits form via Server Action), `success` (static confirmation).
+  - Navigation: Next/Prev buttons disabled automatically based on Zod/RHF validation state.
+  - Local draft recovery via localStorage.
 - **CRM:** Lead management with status tracking (new, contacted, qualified, converted, lost), search, and filtering.
 - **Analytics:** Funnel metrics tracking (video_impression, video_start, cta_unlock, funnel_start, lead_captured). Session, variant, and engagement tracking.
 - **Content Management:** Real-time editing of Hero, About, Why Ireland, and Footer sections via Admin Dashboard.
