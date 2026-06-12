@@ -2,13 +2,7 @@
 
 import { AnimatePresence } from 'framer-motion'
 import { useFunnel } from './funnel-context'
-import { Step1 } from './step-1'
-import { Step2 } from './step-2'
-import { Step3 } from './step-3'
-import { Step4 } from './step-4'
-import { Step5 } from './step-5'
-import { Step6 } from './step-6'
-import { Step7 } from './step-7'
+import { FunnelRenderer } from './funnel-renderer'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 
 interface FunnelModalProps {
@@ -34,13 +28,7 @@ export function FunnelModal({ open, onOpenChange }: FunnelModalProps) {
 
         <div className="p-8 pt-10">
           <AnimatePresence mode="wait">
-            {step === 1 && <Step1 key="step1" />}
-            {step === 2 && <Step2 key="step2" />}
-            {step === 3 && <Step3 key="step3" />}
-            {step === 4 && <Step4 key="step4" />}
-            {step === 5 && <Step5 key="step5" />}
-            {step === 6 && <Step6 key="step6" />}
-            {step === 7 && <Step7 key="step7" />}
+            <FunnelRenderer />
           </AnimatePresence>
         </div>
       </DialogContent>
