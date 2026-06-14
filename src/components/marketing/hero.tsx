@@ -131,10 +131,14 @@ export const HeroContent = ({
               className={cn(
                 'w-full flex gap-3 justify-center items-center group transition-all duration-700 border border-transparent',
                 isUnlocked
-                  ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-[0_0_40px_rgba(16,185,129,0.3)]'
-                  : 'bg-emerald-600/50 text-white/80 cursor-not-allowed hover:bg-emerald-600/50',
+                  ? 'bg-emerald-500 hover:bg-emerald-400 text-white shadow-[0_0_40px_rgba(16,185,129,0.6)]'
+                  : 'bg-emerald-800 text-emerald-200/80 cursor-not-allowed hover:bg-emerald-800',
               )}
-              onClick={() => {
+              onClick={(e) => {
+                if (!isUnlocked) {
+                  e.preventDefault()
+                  return
+                }
                 setIsModalOpen(true)
                 trackEvent({
                   event_name: 'form_open',
