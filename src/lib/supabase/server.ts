@@ -98,11 +98,15 @@ export async function createClient(options?: { anonymous?: boolean }) {
         },
         setAll(cookiesToSet) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options),
-            )
+            cookiesToSet.forEach(({ name, value, options }) => {
+              const safeOptions = { ...options }
+              if (safeOptions.domain === '') {
+                delete safeOptions.domain
+              }
+              cookieStore.set(name, value, safeOptions)
+            })
           } catch (error) {
-            // The `setAll` method was called from a Server Component.
+            // fail silently
           }
         },
       },

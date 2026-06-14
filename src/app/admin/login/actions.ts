@@ -28,6 +28,7 @@ export async function login(formData: FormData) {
   const supabase = await createClient()
   const cookieStore = await cookies()
 
+  let cloudAuthSuccess = false
   // 1. Try Official Supabase Auth (Cloud or Full Stack)
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -35,9 +36,10 @@ export async function login(formData: FormData) {
       password,
     })
 
-    if (!error && data.user) {
-      redirect('/admin')
-      return
+    if (error) {
+      // fail silently
+    } else if (data.user) {
+      cloudAuthSuccess = true
     }
 
     // If Gotrue fails (whether due to being offline or invalid credentials),
@@ -47,6 +49,10 @@ export async function login(formData: FormData) {
     }
   } catch (err) {
     // Continue to local fallback if fetch fails
+  }
+
+  if (cloudAuthSuccess) {
+    redirect('/admin')
   }
 
   // 2. Fallback: Local DB Auth (Postgres + PostgREST)
