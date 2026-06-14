@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Migration/Debug scripts
+scripts/audit.ts
+scripts/fix_audit.ts
+scripts/migrate.ts
+supabase/.temp/
