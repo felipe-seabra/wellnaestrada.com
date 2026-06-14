@@ -1,14 +1,14 @@
 'use client'
 
-import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowRight, Lock, Sparkles } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { ArrowRight, Sparkles } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import { VSLPlayer } from '@/features/vsl/components/vsl-player'
 import { Container } from '@/components/shared/container'
 import { Heading } from '@/components/shared/heading'
 import { CTAButton } from '@/components/shared/cta-button'
-import { Button } from '@/components/ui/button'
 import { FunnelProvider } from '../funnel/funnel-context'
 import { FunnelModal } from '../funnel/funnel-modal'
 import { trackEvent } from '@/features/analytics/actions'
@@ -32,7 +32,6 @@ export const HeroContent = ({
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    // Initialize session_id if not present
     if (typeof window !== 'undefined') {
       let sessionId = localStorage.getItem('funnel_session_id')
       if (!sessionId) {
@@ -43,117 +42,134 @@ export const HeroContent = ({
   }, [])
 
   return (
-    <Container className="relative pb-24 pt-10 sm:pt-16 lg:pt-24 flex flex-col items-center">
-      {/* Background Decorative Elements */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute left-[50%] top-0 h-[1000px] w-[1000px] -translate-x-[50%] [mask-image:radial-gradient(closest-side,white,transparent)] sm:left-[-20%] lg:left-[10%]">
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-blue-500/10 blur-3xl" />
-        </div>
-      </div>
-
-      {/* Script Branding Moment */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8 text-center"
-      >
-        <span className="text-emerald-500 font-brand text-6xl sm:text-7xl lg:text-9xl drop-shadow-[0_2px_2px_rgba(0,0,0,0.05)] block leading-tight">
-          {brandName}
-        </span>
-      </motion.div>
-
-      <div className="text-center max-w-4xl mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <Heading level={1} className="text-3xl sm:text-5xl lg:text-6xl">
-            {title}
-          </Heading>
-        </motion.div>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-6 text-zinc-600 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed text-balance"
-        >
-          {subtitle}
-        </motion.p>
-      </div>
-
-      {/* VSL Section */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-        className="mt-12 w-full max-w-5xl px-4"
-      >
-        <VSLPlayer
-          videoId={videoId}
-          unlockSeconds={unlockSeconds}
-          onUnlock={() => setIsUnlocked(true)}
+    <div className="relative min-h-[90vh] flex items-center justify-center pt-32 pb-20 overflow-hidden">
+      {/* Cinematic Background */}
+      <div className="absolute inset-0 -z-20">
+        <Image
+          src="/images/well.jpg"
+          alt="Well na Estrada na Irlanda"
+          fill
+          priority
+          className="object-cover object-top"
         />
-      </motion.div>
+        {/* Dark overlay: zinc-950 (not pure black). 75-95% opacity keeps photo visible but ensures text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/75 via-zinc-950/85 to-zinc-950" />
+      </div>
 
-      {/* CTA Section */}
-      <div className="mt-12 flex flex-col items-center gap-4 px-4 w-full max-w-md">
-        <AnimatePresence mode="wait">
-          {!isUnlocked ? (
-            <motion.div
-              key="locked"
+      <Container className="relative z-10 w-full">
+        <div className="flex flex-col items-center text-center max-w-4xl mx-auto space-y-10 lg:space-y-12">
+          {/* Header Text */}
+          <div className="space-y-6">
+            <motion.span
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="w-full"
+              className="inline-block text-emerald-400 font-brand text-3xl sm:text-4xl lg:text-5xl drop-shadow-md"
             >
-              <Button
-                disabled
-                size="lg"
-                className="w-full h-16 rounded-2xl bg-zinc-800 text-zinc-400 border-zinc-700 cursor-not-allowed flex gap-3 text-lg font-semibold"
-              >
-                <Lock className="w-5 h-5 opacity-50" />
-                Assista para liberar
-              </Button>
-              <p className="mt-3 text-sm text-zinc-500 text-center animate-pulse">
-                O botão de planejamento será liberado em instantes...
-              </p>
-            </motion.div>
-          ) : (
+              {brandName}
+            </motion.span>
+
             <motion.div
-              key="unlocked"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ type: 'spring', damping: 15, stiffness: 200 }}
-              className="w-full"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.6,
+                delay: 0.05,
+                ease: [0.16, 1, 0.3, 1],
+              }}
             >
-              <CTAButton
-                glow
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white flex gap-3 group"
-                onClick={() => {
-                  setIsModalOpen(true)
-                  trackEvent({
-                    event_name: 'form_open',
-                    session_id:
-                      localStorage.getItem('funnel_session_id') || undefined,
-                  })
-                }}
+              {/* White text, large authoritative size */}
+              <Heading
+                level={1}
+                className="text-4xl sm:text-5xl lg:text-6xl text-white font-bold leading-tight"
               >
-                <Sparkles className="w-6 h-6 animate-pulse" />
-                Iniciar meu planejamento
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </CTAButton>
-              <p className="mt-3 text-sm text-emerald-500 font-medium text-center">
-                Acesso liberado! Clique acima para começar.
-              </p>
+                {title}
+              </Heading>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.6,
+                delay: 0.1,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="text-zinc-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed text-balance"
+            >
+              {subtitle}
+            </motion.p>
+          </div>
+
+          {/* VSL Player */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-3xl mx-auto relative group"
+          >
+            {/* Glassmorphism subtle frame behind player */}
+            <div className="absolute -inset-1 bg-gradient-to-br from-emerald-500/20 to-zinc-800/20 rounded-3xl blur-md opacity-50 group-hover:opacity-100 transition duration-1000" />
+            <div className="relative rounded-2xl overflow-hidden ring-1 ring-white/10 shadow-2xl bg-zinc-950">
+              <VSLPlayer
+                videoId={videoId}
+                unlockSeconds={unlockSeconds}
+                onUnlock={() => setIsUnlocked(true)}
+              />
+            </div>
+          </motion.div>
+
+          {/* CTA Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-sm mx-auto pt-2"
+          >
+            {/* CTA solid in BOTH states. Dormant (zinc) vs Vibrant (emerald) */}
+            <CTAButton
+              glow={isUnlocked}
+              className={cn(
+                'w-full flex gap-3 justify-center items-center group transition-all duration-700 border border-transparent',
+                isUnlocked
+                  ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-[0_0_40px_rgba(16,185,129,0.3)]'
+                  : 'bg-zinc-800 hover:bg-zinc-700 text-white border-zinc-700/50',
+              )}
+              onClick={() => {
+                setIsModalOpen(true)
+                trackEvent({
+                  event_name: 'form_open',
+                  session_id:
+                    localStorage.getItem('funnel_session_id') || undefined,
+                })
+              }}
+            >
+              <Sparkles
+                className={cn(
+                  'h-5 transition-all duration-700',
+                  isUnlocked
+                    ? 'w-5 opacity-100 animate-pulse text-emerald-100'
+                    : 'w-0 opacity-0 -ml-2',
+                )}
+              />
+              <span className="truncate">Iniciar meu planejamento</span>
+              <ArrowRight className="w-5 h-5 flex-shrink-0 group-hover:translate-x-1 transition-transform" />
+            </CTAButton>
+            <p
+              className={cn(
+                'mt-4 text-sm font-medium transition-colors duration-700',
+                isUnlocked ? 'text-emerald-400' : 'text-zinc-400',
+              )}
+            >
+              {isUnlocked
+                ? '✓ Diagnóstico personalizado liberado'
+                : 'Assista ao vídeo para uma experiência completa'}
+            </p>
+          </motion.div>
+        </div>
+      </Container>
 
       <FunnelModal open={isModalOpen} onOpenChange={setIsModalOpen} />
-    </Container>
+    </div>
   )
 }
 

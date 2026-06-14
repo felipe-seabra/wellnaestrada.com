@@ -46,7 +46,7 @@ This file is the **single source of truth** for all AI agents and human develope
 
 ### Key Modules
 
-- **VSL Funnel:** User watches a configurable amount of VSL to unlock the "Iniciar Planejamento" button. Logic isolated in `src/features/vsl`. Uses the official YouTube IFrame Player API directly.
+- **VSL Funnel:** User watches a configurable amount of VSL to trigger the "Soft-Gated CTA" upgrade. Logic isolated in `src/features/vsl`. The CTA is always available but receives a premium visual upgrade after viewing. Uses the official YouTube IFrame Player API directly.
 - **Lead Onboarding (Dynamic Funnel):** Configuration-driven multi-step flow rendered via `DynamicFunnelStep`.
   - Configured via an array in `src/components/funnel/config.ts`.
   - Step types: `text-input` (auto-focuses input), `choice-cards` (auto-advances 300ms after selection), `textarea-submit` (submits form via Server Action), `success` (static confirmation).
@@ -68,6 +68,7 @@ This file is the **single source of truth** for all AI agents and human develope
 
 - **TypeScript:** Strict mode. No `any`. Use `unknown` for untyped data and narrow with type guards. Use `Record<string, unknown>` instead of `Record<string, any>`.
 - **Components:** Functional components only. Keep them small and focused.
+- **Motion System:** All UI animations must use the shared Framer Motion wrappers in `src/components/shared/motion.tsx` (e.g., `FadeUp`, `ScaleIn`, `StaggerContainer`). Avoid inline `motion.div` configs to ensure a consistent premium ease curve (`[0.16, 1, 0.3, 1]`).
 - **Naming:**
   - PascalCase for components and types.
   - camelCase for hooks, variables, and functions.
