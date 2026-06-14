@@ -8,6 +8,7 @@ import { Container } from '@/components/shared/container'
 import { Heading } from '@/components/shared/heading'
 import { StatCard } from '@/components/shared/stat-card'
 import { Footer } from '@/components/layout/footer'
+import { MobileCTABar } from '@/components/layout/mobile-cta-bar'
 import { Navbar } from '@/components/layout/navbar'
 import { SettingsService } from '@/services/settings.service'
 import { ContentService } from '@/services/content.service'
@@ -34,7 +35,7 @@ export default async function Home() {
   ]
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen pb-20 sm:pb-0">
       <Navbar brandName={brandSettings.brandName} />
 
       {/* Hero Section */}
@@ -148,6 +149,8 @@ export default async function Home() {
         contactEmail={brandSettings.contactEmail}
         copyrightText={brandSettings.copyrightText}
       />
+
+      <MobileCTABar />
     </div>
   )
 }
