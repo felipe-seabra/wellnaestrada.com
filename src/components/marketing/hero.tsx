@@ -125,14 +125,14 @@ export const HeroContent = ({
             transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="w-full max-w-sm mx-auto pt-2"
           >
-            {/* CTA solid in BOTH states. Dormant (zinc) vs Vibrant (emerald) */}
             <CTAButton
+              disabled={!isUnlocked}
               glow={isUnlocked}
               className={cn(
                 'w-full flex gap-3 justify-center items-center group transition-all duration-700 border border-transparent',
                 isUnlocked
                   ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-[0_0_40px_rgba(16,185,129,0.3)]'
-                  : 'bg-zinc-800 hover:bg-zinc-700 text-white border-zinc-700/50',
+                  : 'bg-emerald-600/50 text-white/80 cursor-not-allowed hover:bg-emerald-600/50',
               )}
               onClick={() => {
                 setIsModalOpen(true)
