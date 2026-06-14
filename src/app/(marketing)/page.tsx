@@ -28,10 +28,10 @@ export default async function Home() {
   ])
 
   const stats = [
-    { label: 'Vidas Transformadas', value: '500+', icon: Users },
-    { label: 'Satisfação', value: '99%', icon: Star },
-    { label: 'Suporte 24/7', value: 'Premium', icon: ShieldCheck },
-    { label: 'Destinos na Irlanda', value: 'Top 5', icon: Plane },
+    { label: 'Consultoria', value: 'Personalizada', icon: Users },
+    { label: 'Base', value: 'Dublin', icon: Plane },
+    { label: 'Suporte', value: 'Premium', icon: ShieldCheck },
+    { label: 'Desde', value: '2022', icon: Star },
   ]
 
   return (
