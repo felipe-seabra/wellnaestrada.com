@@ -1,6 +1,5 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
-import { debugLog } from '@/lib/debug'
 
 const SESSION_COOKIE = 'well_admin_session'
 const SESSION_SECRET =
@@ -15,10 +14,11 @@ async function verifySessionToken(token: string | undefined): Promise<boolean> {
   if (!token) return false
 
   try {
-    const parts = token.split('.')
-    if (parts.length !== 2) return false
+    const lastDot = token.lastIndexOf('.')
+    if (lastDot === -1) return false
 
-    const [payload, signature] = parts
+    const payload = token.slice(0, lastDot)
+    const signature = token.slice(lastDot + 1)
 
     const encoder = new TextEncoder()
     const keyData = encoder.encode(SESSION_SECRET)
@@ -54,7 +54,6 @@ async function verifySessionToken(token: string | undefined): Promise<boolean> {
 }
 
 export async function updateSession(request: NextRequest) {
-  await debugLog('MIDDLEWARE_EXEC', { path: request.nextUrl.pathname })
   let supabaseResponse = NextResponse.next({
     request,
   })
@@ -87,34 +86,21 @@ export async function updateSession(request: NextRequest) {
   try {
     const { data } = await supabase.auth.getUser()
     user = data.user
-    await debugLog('SUPABASE_AUTH_RESULT', { hasUser: !!user })
   } catch (err) {
-    await debugLog('SUPABASE_AUTH_ERROR', { error: String(err) })
     // Fail silently, fallback to local session
   }
 
   // 2. Fallback to local session cookie if no Supabase user
   const localSession = request.cookies.get(SESSION_COOKIE)?.value
   const isLocalAuthenticated = await verifySessionToken(localSession)
-  await debugLog('SESSION_VALIDATION', {
-    hasLocalSession: !!localSession,
-    isLocalAuthenticated,
-  })
 
   const isAuthenticated = !!user || isLocalAuthenticated
 
-  const willRedirect =
+  if (
     !isAuthenticated &&
     !request.nextUrl.pathname.startsWith('/admin/login') &&
     request.nextUrl.pathname.startsWith('/admin')
-
-  await debugLog('REDIRECT_CHECK', {
-    isAuthenticated,
-    path: request.nextUrl.pathname,
-    willRedirect,
-  })
-
-  if (willRedirect) {
+  ) {
     const url = request.nextUrl.clone()
     url.pathname = '/admin/login'
     return NextResponse.redirect(url)

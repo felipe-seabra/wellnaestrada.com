@@ -4,7 +4,6 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import crypto from 'crypto'
-import { debugLog } from '@/lib/debug'
 
 const SESSION_COOKIE = 'well_admin_session'
 const SESSION_SECRET =
@@ -26,7 +25,6 @@ function createSessionToken(userId: string, email: string) {
 export async function login(formData: FormData) {
   const email = formData.get('email') as string
   const password = formData.get('password') as string
-  await debugLog('LOGIN_START', { email })
   const supabase = await createClient()
   const cookieStore = await cookies()
 
@@ -54,7 +52,6 @@ export async function login(formData: FormData) {
   }
 
   if (cloudAuthSuccess) {
-    await debugLog('CLOUD_AUTH_SUCCESS', {})
     redirect('/admin')
   }
 
@@ -76,7 +73,6 @@ export async function login(formData: FormData) {
 
   const user = admin[0]
   const token = createSessionToken(user.admin_id, user.admin_email)
-  await debugLog('COOKIE_CREATION', { tokenGenerated: !!token })
 
   cookieStore.set(SESSION_COOKIE, token, {
     httpOnly: true,
@@ -84,12 +80,6 @@ export async function login(formData: FormData) {
     sameSite: 'lax',
     path: '/',
     maxAge: 60 * 60 * 24, // 24 hours
-  })
-
-  await debugLog('COOKIE_SET', {
-    hasToken: !!token,
-    secure: process.env.NODE_ENV === 'production',
-    env: process.env.NODE_ENV,
   })
 
   redirect('/admin')
