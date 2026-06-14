@@ -1,10 +1,10 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Section } from '@/components/shared/section'
 import { Container } from '@/components/shared/container'
 import { Heading } from '@/components/shared/heading'
+import { FadeUp, ScaleIn } from '@/components/shared/motion'
 
 interface LifestyleSectionProps {
   brandName: string
@@ -30,13 +30,7 @@ export const LifestyleSection = ({ brandName }: LifestyleSectionProps) => {
 
       <Container className="relative z-10">
         <div className="flex flex-col items-center text-center space-y-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="space-y-4 max-w-3xl"
-          >
+          <FadeUp className="space-y-4 max-w-3xl" duration={0.8}>
             <span className="text-emerald-500 font-serif italic text-xl sm:text-2xl tracking-wide">
               Viver, não apenas existir
             </span>
@@ -49,14 +43,11 @@ export const LifestyleSection = ({ brandName }: LifestyleSectionProps) => {
               através de estratégia, segurança e o estilo de vida que você
               merece.
             </p>
-          </motion.div>
+          </FadeUp>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.2 }}
+          <ScaleIn
             className="relative w-full max-w-4xl aspect-[21/9] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10"
+            delay={0.2}
           >
             <div className="absolute inset-0 bg-emerald-500/5 mix-blend-overlay z-10" />
             <Image
@@ -78,7 +69,7 @@ export const LifestyleSection = ({ brandName }: LifestyleSectionProps) => {
               </div>
               <div className="w-12 h-[1px] bg-white/30 mb-2" />
             </div>
-          </motion.div>
+          </ScaleIn>
         </div>
       </Container>
     </Section>
