@@ -19,10 +19,16 @@ export async function createAnonymousClient() {
       },
       global: {
         fetch: (url, options) => {
-          if (typeof url === 'string' && url.includes('/rest/v1/')) {
-            url = url.replace('/rest/v1/', '/')
-          } else if (url instanceof URL && url.pathname.includes('/rest/v1/')) {
-            url.pathname = url.pathname.replace('/rest/v1/', '/')
+          const urlString = url.toString()
+          if (
+            urlString.includes('localhost:8000') &&
+            urlString.includes('/rest/v1/')
+          ) {
+            if (typeof url === 'string') {
+              url = url.replace('/rest/v1/', '/')
+            } else if (url instanceof URL) {
+              url.pathname = url.pathname.replace('/rest/v1/', '/')
+            }
           }
           return fetch(url, options)
         },
@@ -48,10 +54,16 @@ export async function createAdminClient() {
       },
       global: {
         fetch: (url, options) => {
-          if (typeof url === 'string' && url.includes('/rest/v1/')) {
-            url = url.replace('/rest/v1/', '/')
-          } else if (url instanceof URL && url.pathname.includes('/rest/v1/')) {
-            url.pathname = url.pathname.replace('/rest/v1/', '/')
+          const urlString = url.toString()
+          if (
+            urlString.includes('localhost:8000') &&
+            urlString.includes('/rest/v1/')
+          ) {
+            if (typeof url === 'string') {
+              url = url.replace('/rest/v1/', '/')
+            } else if (url instanceof URL) {
+              url.pathname = url.pathname.replace('/rest/v1/', '/')
+            }
           }
           return fetch(url, options)
         },
@@ -96,10 +108,16 @@ export async function createClient(options?: { anonymous?: boolean }) {
       },
       global: {
         fetch: (url, options) => {
-          if (typeof url === 'string' && url.includes('/rest/v1/')) {
-            url = url.replace('/rest/v1/', '/')
-          } else if (url instanceof URL && url.pathname.includes('/rest/v1/')) {
-            url.pathname = url.pathname.replace('/rest/v1/', '/')
+          const urlString = url.toString()
+          if (
+            urlString.includes('localhost:8000') &&
+            urlString.includes('/rest/v1/')
+          ) {
+            if (typeof url === 'string') {
+              url = url.replace('/rest/v1/', '/')
+            } else if (url instanceof URL) {
+              url.pathname = url.pathname.replace('/rest/v1/', '/')
+            }
           }
           return fetch(url, options)
         },
