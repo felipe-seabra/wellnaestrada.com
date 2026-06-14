@@ -150,7 +150,7 @@ export default async function PrivacyPolicyPage() {
       </main>
       <Footer
         brandName={brandSettings.brandName}
-        description={footerContent.description}
+        content={footerContent}
         instagramUrl={brandSettings.instagramUrl}
         contactEmail={brandSettings.contactEmail}
         copyrightText={brandSettings.copyrightText}

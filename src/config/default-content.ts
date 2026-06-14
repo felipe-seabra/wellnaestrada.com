@@ -6,6 +6,13 @@ export const DEFAULT_CONTENT = {
   },
   footer: {
     description: 'Consultoria especializada para brasileiros na Irlanda.',
+    linksTitle: 'Links Rápidos',
+    contactTitle: 'Contato',
+    bottomText: 'IRL • BR',
+    socialLabels: {
+      instagram: 'Instagram',
+      email: 'Email',
+    },
   },
   about: {
     title: 'De brasileiro para brasileiro: Eu estive no seu lugar.',

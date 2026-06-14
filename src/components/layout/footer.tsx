@@ -7,20 +7,38 @@ import { NAVIGATION } from '@/lib/constants/navigation'
 
 interface FooterProps {
   brandName: string
-  description: string
   instagramUrl: string
   contactEmail: string
   copyrightText?: string
+  content: {
+    description: string
+    linksTitle?: string
+    contactTitle?: string
+    bottomText?: string
+    socialLabels?: {
+      instagram: string
+      email: string
+    }
+  }
 }
 
 export const Footer = ({
   brandName,
-  description,
   instagramUrl,
   contactEmail,
   copyrightText,
+  content,
 }: FooterProps) => {
   const currentYear = new Date().getFullYear()
+
+  const renderCopyright = () => {
+    if (!copyrightText) {
+      return `© ${currentYear} ${brandName}. Todos os direitos reservados.`
+    }
+    return copyrightText
+      .replace(/20\d\d/, currentYear.toString())
+      .replace('{year}', currentYear.toString())
+  }
 
   const quickLinks = [
     { label: 'Início', href: NAVIGATION.home },
@@ -41,12 +59,16 @@ export const Footer = ({
                 {brandName}
               </span>
             </Link>
-            <p className="max-w-sm text-lg leading-relaxed">{description}</p>
+            <p className="max-w-sm text-lg leading-relaxed">
+              {content.description}
+            </p>
           </div>
 
           {/* Quick Links Column */}
           <div className="space-y-6">
-            <h4 className="text-white font-semibold text-lg">Links Rápidos</h4>
+            <h4 className="text-white font-semibold text-lg">
+              {content.linksTitle || 'Links Rápidos'}
+            </h4>
             <ul className="space-y-4">
               {quickLinks.map((link) => (
                 <li key={link.label}>
@@ -69,7 +91,9 @@ export const Footer = ({
 
           {/* Contact Column */}
           <div className="space-y-6">
-            <h4 className="text-white font-semibold text-lg">Contato</h4>
+            <h4 className="text-white font-semibold text-lg">
+              {content.contactTitle || 'Contato'}
+            </h4>
             <ul className="space-y-4">
               <li>
                 <a
@@ -79,7 +103,7 @@ export const Footer = ({
                   className="flex items-center gap-3 hover:text-emerald-500 transition-colors group"
                 >
                   <Camera className="w-5 h-5 text-zinc-500 group-hover:text-emerald-500" />
-                  Instagram
+                  {content.socialLabels?.instagram || 'Instagram'}
                 </a>
               </li>
               <li>
@@ -88,7 +112,7 @@ export const Footer = ({
                   className="flex items-center gap-3 hover:text-emerald-500 transition-colors group"
                 >
                   <Mail className="w-5 h-5 text-zinc-500 group-hover:text-emerald-500" />
-                  Email
+                  {content.socialLabels?.email || 'Email'}
                 </a>
               </li>
             </ul>
@@ -97,12 +121,9 @@ export const Footer = ({
 
         {/* Legal Bottom */}
         <div className="mt-16 pt-8 border-t border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-zinc-500">
-          <p>
-            {copyrightText ||
-              `© ${currentYear} ${brandName}. Todos os direitos reservados.`}
-          </p>
+          <p>{renderCopyright()}</p>
           <p className="font-mono opacity-50 uppercase tracking-widest">
-            IRL • BR
+            {content.bottomText || 'IRL • BR'}
           </p>
         </div>
       </Container>

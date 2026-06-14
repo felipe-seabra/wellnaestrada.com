@@ -9,5 +9,5 @@ export const DEFAULT_SETTINGS = {
     'Well na Estrada - O mapa estratégico para o seu intercâmbio premium',
   meta_description:
     'Consultoria especializada para brasileiros que desejam estudar, trabalhar e construir uma nova vida na Irlanda.',
-  copyright_text: '© 2024 Well na Estrada. Todos os direitos reservados.',
+  copyright_text: '© {year} Well na Estrada. Todos os direitos reservados.',
 } as const
