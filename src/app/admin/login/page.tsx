@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card } from '@/components/ui/card'
+import { PasswordInput } from '@/components/ui/password-input'
 
 export default async function LoginPage(props: {
   searchParams: Promise<{ error?: string }>
@@ -34,7 +35,7 @@ export default async function LoginPage(props: {
 
           <div className="space-y-2">
             <Label htmlFor="password">Senha</Label>
-            <Input id="password" name="password" type="password" required />
+            <PasswordInput id="password" name="password" required />
           </div>
 
           {error && (
