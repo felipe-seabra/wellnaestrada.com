@@ -2,85 +2,110 @@
 
 Plataforma premium de consultoria e intercâmbio para a Irlanda.
 
-## 🚀 Desenvolvimento Local
+## 1. Project Purpose & Product Description
 
-Este projeto utiliza uma infraestrutura isolada e robusta baseada em Docker para garantir consistência entre ambientes.
+**Well na Estrada** is a premium creator-led platform designed to drive high-quality lead conversion for Ireland exchange consultancy. It uses a trust-building Video Sales Letter (VSL) funnel, transitioning users through a cinematic experience into a multi-step onboarding form, and finally into a local CRM for lead management.
 
-### 1. Pré-requisitos
+## 2. Tech Stack
 
-- Docker & Docker Compose
+- **Frontend:** Next.js 16 (App Router), React 19, TypeScript
+- **Styling:** Tailwind CSS 4, shadcn/ui (Radix UI), Framer Motion
+- **Video:** Official YouTube IFrame Player API (Native integration)
+- **Backend:** Supabase (PostgreSQL, SSR, Auth, Storage)
+- **State Management:** React Hook Form + Zod, Context API
+- **Infrastructure:** Docker-based local development (Postgres, PostgREST, Adminer)
+
+## 3. Folder Structure Overview
+
+```text
+src/
+├── app/               # Next.js App Router (Public routes & Admin Dashboard)
+├── components/        # React components (Funnel, Layout, Marketing, Shared, UI)
+├── config/            # Fallback configuration and default content
+├── features/          # Domain-specific modules (Analytics, Lead Form, VSL)
+├── lib/               # Utilities, Supabase clients, Constants, Validations (Zod)
+├── repositories/      # Data access layer for Supabase
+└── services/          # Business logic and content fallback orchestration
+```
+
+## 4. Environment Setup & Workflow
+
+### Prerequisites
 - Node.js 18+
-- NPM
+- npm
+- Docker & Docker Compose
 
-### 2. Infraestrutura (Docker)
+### Local Development Workflow
+1. Install dependencies: `npm install`
+2. Start the Docker infrastructure: `docker compose up -d`
+   - **PostgreSQL 15:** Port `54322`
+   - **PostgREST API:** Port `8000`
+   - **Adminer (DB UI):** Port `8080`
+3. Run the development server: `npm run dev`
+4. Setup Admin user (locally): `npm run setup-admin`
 
-Inicie os serviços de banco de dados e API:
+### Supabase Workflow (Local vs Production)
+- **Local:** The app connects to the local PostgREST API (`http://localhost:8000`) spun up by Docker. Migrations located in `supabase/migrations` are automatically applied on the first run.
+- **Production:** The app connects to Supabase Cloud via `NEXT_PUBLIC_SUPABASE_URL` and uses Supabase Auth directly.
 
-```bash
-docker compose up -d
-```
+## 5. Key Architectures
 
-Isso iniciará:
+### Authentication Overview
+We use a **Dual-Mode Authentication** system for resilience:
+1. Tries **Supabase Cloud Auth** (GoTrue) first.
+2. Falls back to a **Local DB** verification (`verify_admin_credentials` RPC) using an HMAC session cookie (`well_admin_session`) powered by the Web Crypto API.
 
-- **well-db**: PostgreSQL 15 (Porta `54322`)
-- **well-api**: PostgREST API (Porta `8000`)
-- **well-adminer**: Painel de Gerenciamento de DB (Porta `8080`)
+### Funnel Overview
+A configuration-driven 7-step onboarding flow (`src/components/funnel/config.ts`).
+- **Flow:** VSL View → Unlock CTA → Funnel Form → Server Action (`createLead`) → CRM.
+- **Persistence:** Local draft recovery via `localStorage`.
 
-### 3. Aplicação (Next.js)
+### Motion System Overview
+Centralized in `src/components/shared/motion.tsx` using a premium ease curve (`[0.16, 1, 0.3, 1]`). We enforce the use of shared wrappers (`FadeUp`, `ScaleIn`, `StaggerContainer`) instead of inline `motion.div` configs to guarantee visual consistency.
 
-```bash
-npm install
-npm run dev
-```
+## 6. Branding Assets & Deployment
 
-Acesse [http://localhost:3001](http://localhost:3001) (ou a porta disponível indicada pelo Next.js).
+- **Branding:** Uses Kaushan Script for the brand name, a premium Emerald color palette, and cinematic lifestyle images (`public/images/`). A dynamic OG image is available for social sharing.
+- **Deployment (Vercel):** The project relies on Vercel's zero-config Next.js detection. Standard deployment processes apply. 
+- **Pre-deployment Checklist:** Always run `npm run lint`, `npm run type-check`, `npm run build`, and `npm audit`.
 
----
+## 7. Database Migration History
 
-## 🛠️ Gestão de Ambiente (Multi-Project)
-
-Caso você tenha outros projetos Supabase rodando localmente (ex: `avaliaprudente.com.br`), use os seguintes comandos para alternar com segurança:
-
-### Para trabalhar na Well na Estrada:
-
-```bash
-# Para o outro projeto (no diretório dele)
-supabase stop
-
-# Ou pare manualmente se houver conflito de portas
-docker stop $(docker ps -q --filter "name=supabase_")
-
-# Inicie a Well
-docker compose up -d
-```
-
-### Para voltar ao AvaliaPrudente:
-
-```bash
-docker compose stop # Para a Well
-# No diretório do avaliaprudente:
-supabase start
-```
+Migrations are stored in `supabase/migrations/`:
+1. `init_schema.sql`: Initial `leads` and `analytics_events` tables.
+2. `update_vsl_funnel.sql`: Funnel tracking columns.
+3. `rls_policies.sql`: Row Level Security policies.
+4. `platform_settings.sql`: Initial CMS tables.
+5. `site_settings.sql`: Flat table for central settings.
+6. `platform_admins.sql`: Local admin authentication fallback.
+7. `drop_platform_settings.sql`: Cleanup of legacy tables.
 
 ---
 
-## 📊 Estrutura de Dados
+## 8. Current State of the Project
 
-O banco de dados já vem pré-configurado com:
+### Completed
+- [x] Supabase Cloud migration
+- [x] Production login fix
+- [x] Funnel refactor
+- [x] Motion system
+- [x] Hero redesign
+- [x] Branding assets
+- [x] OG image
+- [x] Mobile CTA
+- [x] Password visibility toggle
 
-- **site_settings**: Configurações globais (marca, redes sociais, links).
-- **platform_content**: Conteúdo dinâmico das seções da landing page.
-- **leads**: CRM inicial e captura de conversão.
-- **analytics_events**: Rastreamento de comportamento do usuário.
+### Pending
+- [ ] Content simplification audit
+- [ ] Footer/content centralization
+- [ ] Premium motion enhancements
+- [ ] CRM improvements
 
-As migrações estão localizadas em `./supabase/migrations`.
+## 9. Known Limitations
+- Several instances of `any` types remain in the codebase, bypassing strict typing.
+- Some dashboard metrics might rely on hardcoded fallbacks if data is missing.
 
-## 🎨 Padronização e Qualidade
-
-- **Linting**: `npm run lint`
-- **Estilos**: Tailwind CSS 4 com estética Premium Emerald.
-- **Componentes**: Radix UI + Framer Motion.
-
----
-
-_Developed with focus on transformation and excellence. 🇮🇪_
+## 10. Future Roadmap
+- Implement advanced filters and pagination for leads in the CRM.
+- Expand Content Management UI to cover all landing page sections natively without fallbacks.
+- Migrate away from `any` types using robust Zod schemas.
