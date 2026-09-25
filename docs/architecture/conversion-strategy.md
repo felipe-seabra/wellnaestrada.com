@@ -1,43 +1,39 @@
-# Estratégia de Conversão e Marca - Well na Estrada
+# Conversion Architecture
 
-Este documento detalha o posicionamento estratégico e a psicologia de conversão da plataforma Well na Estrada.
+This document describes the technical conversion architecture implemented by the Well na Estrada platform. It focuses on the application flow and engineering decisions rather than private business strategy.
 
-## 1. Posicionamento de Marca (Brand Positioning)
+## Conversion Flow
 
-A Well na Estrada não é uma agência de intercâmbio; é uma **mentoria de transformação de vida**.
+The current landing-page experience uses a video sales letter (VSL) and progressive lead qualification:
 
-- **Arquétipo:** O Guia (The Guide). Aquele que já percorreu o caminho e oferece o mapa com segurança.
-- **Tom de Voz:** Humano, aspiracional, confiável e direto.
-- **Diferencial:** Creator-led (focado na autoridade do Well) e Premium (atendimento personalizado vs. escala industrial das agências).
+1. **Hero and value proposition** — establish context and the primary call to action.
+2. **VSL engagement** — present the core content through an embedded video.
+3. **Timed CTA unlock** — enable the qualification action after the configured engagement threshold.
+4. **Multi-step qualification** — collect structured information through a guided form.
+5. **Server-side submission** — validate and persist the lead through server-side application logic.
+6. **Confirmation** — complete the funnel without exposing privileged backend credentials to the browser.
 
-## 2. Fluxo de Conversão (Funnel Psychology)
+## Technical Principles
 
-A landing page foi estruturada para mover o usuário através de 4 estados emocionais:
+- Keep the primary conversion path focused and easy to understand.
+- Use progressive disclosure instead of presenting every question at once.
+- Validate form data with React Hook Form and Zod.
+- Persist only the local draft state required for the user experience.
+- Submit lead data through server-side application logic.
+- Keep analytics and tracking behind the application's privacy and consent controls.
+- Keep production credentials, customer data, and private operational information out of the public repository.
 
-1.  **Fascínio (Hero):** Impacto visual e promessa de um "novo capítulo".
-2.  **Identificação (Storytelling):** O usuário vê que o Well é "gente como a gente" e superou os mesmos medos.
-3.  **Desejo Racional (Por que Irlanda?):** Validação de que a Irlanda é o melhor destino (Euro, Visto, Viagens).
-4.  **Segurança (Prova Social/Stats):** Números e fatos que removem o medo do investimento.
-5.  **Ação (CTA Final):** Conversão direta para WhatsApp, reduzindo a fricção e humanizando a venda.
+## Current Implementation
 
-## 3. Diretrizes Visuais (Visual Direction)
+The implementation uses:
 
-- **Cores Primárias:** `Emerald-600` (Confiança, Irlanda, Crescimento) e `Zinc-900` (Sofisticação, Autoridade).
-- **Tipografia Sugerida:**
-  - Títulos: Serifada moderna (ex: Playfair Display ou Lora) para transmitir elegância.
-  - Corpo: Sans-serif limpa (ex: Inter ou Geist) para legibilidade.
-- **Imagens:** Priorizar fotos reais de lifestyle na Irlanda. Evitar "stock photos" genéricas de pessoas sorrindo em estúdio.
+- Next.js App Router and Server Components where appropriate.
+- Framer Motion for UI transitions.
+- React Hook Form and Zod for form state and validation.
+- Supabase/PostgreSQL for lead persistence.
+- Server Actions and server-side services for privileged operations.
+- A configurable VSL integration and engagement threshold.
 
-## 4. Estratégia de Onboarding (Lead Funnel)
+## Repository Scope
 
-O CTA não deve direcionar imediatamente para o WhatsApp. Em vez disso, inicia um funil de qualificação de 7 passos (Lead Onboarding).
-
-- **Fluxo:** Nome -> Email -> WhatsApp -> Momento Atual -> Financeiro -> Objetivo -> Confirmação.
-- **Objetivo:** Qualificar o lead, salvar no banco de dados e só então direcionar para o WhatsApp com a mensagem pré-configurada. Isso aumenta a autoridade e filtra curiosos.
-
-## 5. Próximos Passos de Implementação
-
-- [ ] Implementar Widget de vídeo flutuante (Creator Trust).
-- [ ] Adicionar seção de Depoimentos em vídeo (UGC).
-- [ ] Refinar FAQ com as 5 principais objeções de visto e custo de vida.
-- [ ] Configurar Analytics para medir cliques no botão de WhatsApp.
+This repository documents technical architecture and implementation patterns. It intentionally excludes private sales scripts, customer data, production credentials, and internal operating procedures.
