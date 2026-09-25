@@ -1,14 +1,11 @@
-version: '3.8'
-
 services:
-  # Database: PostgreSQL with Supabase-compatible extensions
   well-db:
     container_name: well-db
     image: supabase/postgres:15.1.0.147
     ports:
-      - '54322:5432'
+      - "54322:5432"
     environment:
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
     volumes:
@@ -17,35 +14,33 @@ services:
     networks:
       - well-network
     healthcheck:
-      test: ['CMD', 'pg_isready', '-U', 'postgres']
+      test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
-    restart: always
+    restart: unless-stopped
 
-  # API: PostgREST (Automatic REST API for the database)
   well-api:
     container_name: well-api
     image: postgrest/postgrest:v12.0.2
     ports:
-      - '8000:3000'
+      - "8000:3000"
     environment:
-      PGRST_DB_URI: postgres://postgres:postgres@well-db:5432/postgres
+      PGRST_DB_URI: postgres://postgres:${POSTGRES_PASSWORD:-postgres}@well-db:5432/postgres
       PGRST_DB_SCHEMA: public
       PGRST_DB_ANON_ROLE: anon
-      PGRST_JWT_SECRET: super-secret-jwt-token-change-me-in-production
+      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:-change-me-locally}
     depends_on:
       well-db:
         condition: service_healthy
     networks:
       - well-network
 
-  # Database Management: Adminer
   well-adminer:
     container_name: well-adminer
     image: adminer
     ports:
-      - '8080:8080'
+      - "8080:8080"
     networks:
       - well-network
     depends_on:
