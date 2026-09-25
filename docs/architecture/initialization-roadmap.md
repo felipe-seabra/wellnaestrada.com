@@ -1,35 +1,42 @@
-# Setup & Deployment Initialization
+# Development & Deployment Roadmap
 
-## Recommended Initialization Roadmap
+This document describes the current technical setup path for local development and deployment.
 
-To bring this architecture to life, follow these sequential steps:
+## 1. Local Foundation
 
-### Phase 1: Foundation
+1. Install project dependencies.
+2. Copy `.env.example` to `.env.local`.
+3. Configure the local Supabase or Docker/PostgREST environment.
+4. Start the development server with `npm run dev`.
 
-1.  **Initialize Next.js:** `npx create-next-app@latest well-na-estrada --typescript --tailwind --eslint --app --src-dir`
-2.  **Configure Tools:** Setup Prettier, Husky, and lint-staged to enforce code quality and conventional commits.
-3.  **Install Base UI:** Initialize `shadcn/ui` and install Framer Motion.
-4.  **Environment Setup:** Create `.env.example` and define required variables (Supabase URLs, Analytics Keys).
+## 2. Backend
 
-### Phase 2: Backend Integration
+1. Configure Supabase environment variables.
+2. Apply the versioned migrations in `supabase/migrations`.
+3. Keep service-role credentials and session secrets server-side.
+4. Use the admin setup script only with environment-provided credentials.
 
-1.  **Supabase Setup:** Create the Supabase project. Initialize the local Supabase CLI.
-2.  **Database Schema:** Write initial SQL migrations for the `leads` table.
-3.  **Client Configuration:** Setup Supabase SSR clients (Browser, Server, Middleware) under `src/lib/supabase`.
+## 3. Application
 
-### Phase 3: Core Features
+1. Run the Next.js App Router application.
+2. Use the multi-step qualification funnel for lead capture.
+3. Keep privileged database operations in server-side code.
+4. Keep anonymous tracking limited to the intended events and consent model.
 
-1.  **Layouts & Routing:** Create the main layout, landing page skeleton, and shared UI components (Header, Footer).
-2.  **Lead Funnel:** Develop the multi-step qualification modal using React Hook Form + Zod.
-3.  **Server Actions:** Implement the server-side logic to handle lead submission securely and redirect to WhatsApp.
+## 4. Quality Checks
 
-### Phase 4: Observability & SEO
+Before deployment, run:
 
-1.  **Analytics:** Integrate PostHog and Meta Pixel using a custom generic event tracker service.
-2.  **SEO Foundation:** Setup dynamic sitemaps, `robots.txt`, and base metadata configurations.
+```bash
+npm run lint
+npm run type-check
+npm run build
+```
 
-### Phase 5: Polish & Deployment
+Review environment configuration and database policies before each deployment.
 
-1.  **Animations:** Add Framer Motion reveals and page transitions.
-2.  **Performance:** Run Lighthouse audits, optimize fonts and images.
-3.  **Deployment:** Deploy to Vercel and link environment variables.
+## 5. Deployment
+
+The application is structured for deployment to a Next.js-compatible host such as Vercel with Supabase as the managed database and authentication layer.
+
+Production secrets must be configured through the hosting platform's environment settings and must never be committed to Git.
