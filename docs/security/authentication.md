@@ -1,44 +1,37 @@
-# Authentication Architecture
+# Authentication & Security Overview
 
-This project uses a dual-mode authentication system to protect the `/admin` routes. This approach guarantees security in production while allowing seamless local development even when Supabase Auth services are unavailable or bypassed.
+The application protects administrative functionality through authenticated server-side access and route protection.
 
-## Dual-Mode Strategy
+## Principles
 
-The authentication flow is intercepted and evaluated at the Next.js Middleware level (`src/lib/supabase/middleware.ts`).
+- Authentication state is validated on the server.
+- Administrative routes are protected by Next.js middleware.
+- Privileged database access is restricted to server-only code.
+- Service-role credentials must never be exposed to client-side code.
+- Environment-specific secrets belong in local or deployment configuration.
+- External input is validated before persistence or business processing.
 
-1. **Primary Auth (Supabase native):** The system first attempts to validate the user via `supabase.auth.getUser()`. If successful, the user is authenticated securely using Supabase's ecosystem.
-2. **Fallback Auth (HMAC Cookie):** If Supabase validation fails (e.g., local development without internet, or a specific dev setup), the middleware checks for a custom secure cookie named `well_admin_session`.
+## Data Access
 
-## The `well_admin_session` Token
+The application separates presentation from persistence through repositories and services.
 
-The local session token is a simple HMAC-signed string verified using the Web Crypto API, making it fully compatible with the Next.js Edge Runtime.
+Privileged operations use server-side clients only, while public-facing operations follow the database authorization model.
 
-- **Structure:** `payload.signature`
-- **Payload:** Contains timestamp and user data (e.g., `admin:true:timestamp`).
-- **Signature:** Signed using `HMAC-SHA256`.
-- **Secret Key:** Uses `PGRST_JWT_SECRET` from environment variables, or a fallback secret for local dev.
-- **Expiration:** Hardcoded to 24 hours.
+## Local Development
 
-## Security Considerations
+Local credentials should be supplied through `.env.local` and must never be committed.
 
-- **Production Rules:** In production environments, it is critical that `PGRST_JWT_SECRET` is strong, unique, and strictly kept secret.
-- **Edge Compatibility:** The use of `crypto.subtle` instead of Node's `crypto` module ensures the middleware executes fast and without errors on Edge environments like Vercel.
+For local setup, use the values documented in `.env.example`.
 
-## Database Clients & Authorization
+## Security Rule
 
-To securely map authentication states to database queries, we enforce the use of strict, scoped clients provided by `src/lib/supabase/server.ts`:
+Never commit:
 
-1. **`createClient(options)`**: The standard client. Inherits the user's cookie context. If the user is unauthenticated or using the local Fallback Auth (which doesn't generate a native database JWT), it executes queries as the `anon` role, adhering to Row Level Security (RLS) policies.
-2. **`createAdminClient()`**: A privileged client utilizing `SUPABASE_SERVICE_ROLE_KEY`. It completely bypasses RLS. To prevent accidental exposure:
-   - It is protected by the `server-only` package, which throws an error if imported into Client Components.
-   - It should strictly be used within Next.js Server Actions and API Routes to handle admin tasks (e.g., updating `site_settings`).
+- Production passwords
+- API keys
+- Service-role keys
+- JWT secrets
+- Private keys
+- Personal customer data
 
-## Administrator Setup
-
-Administrators are provisioned via the `scripts/setup-admin.mjs` utility, which securely syncs credentials to both Supabase Auth and the local fallback `platform_admins` table.
-
-To set up an admin:
-1. Define `ADMIN_EMAIL` and `ADMIN_PASSWORD` in your `.env.local` file.
-2. Run `npm run setup-admin`.
-
-This ensures that hardcoded credentials are never committed to the repository.
+This document intentionally avoids operational secrets and environment-specific authentication details.
