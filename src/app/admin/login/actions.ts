@@ -6,9 +6,11 @@ import { cookies } from 'next/headers'
 import crypto from 'crypto'
 
 const SESSION_COOKIE = 'well_admin_session'
-const SESSION_SECRET =
-  process.env.PGRST_JWT_SECRET ||
-  'super-secret-jwt-token-change-me-in-production'
+const SESSION_SECRET = process.env.PGRST_JWT_SECRET
+
+if (!SESSION_SECRET) {
+  throw new Error('Missing PGRST_JWT_SECRET environment variable')
+}
 
 /**
  * Creates a simple secure HMAC session token for local/custom auth
