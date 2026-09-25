@@ -1,28 +1,33 @@
 # Deployment Checklist
 
-This checklist must be completed and verified before ANY production deployment.
+Use this checklist before deploying a new version.
 
-## 1. Security & Vulnerability Audit
-- [ ] Run `npm audit` and ensure no high/critical vulnerabilities remain.
-- [ ] Verify no secrets are exposed in `.env.example` or client-side code.
-- [ ] Review Server Actions for proper authorization and validation.
+## Security
 
-## 2. Code Quality & Standards
-- [ ] `npm run lint` passes without errors.
-- [ ] `npm run type-check` passes without errors.
+- [ ] No production secrets are committed.
+- [ ] Environment variables are configured in the deployment platform.
+- [ ] Server-only credentials are not exposed to client bundles.
+- [ ] Server Actions and protected routes validate authorization and input.
 
-## 3. Build & Performance
-- [ ] `npm run build` completes successfully.
-- [ ] Lighthouse audit shows score > 90 for Performance, SEO, and Accessibility.
-- [ ] Images are optimized and using `next/image`.
-- [ ] Metadata is correctly configured for all pages.
+## Code Quality
 
-## 4. Infrastructure & Database
-- [ ] Docker configurations are stable and not exposing insecure ports.
-- [ ] Database migrations are tested and ready to apply.
-- [ ] Rate limiting is implemented for forms and API routes.
+- [ ] `npm run lint` passes.
+- [ ] `npm run type-check` passes.
+- [ ] `npm run build` passes.
 
-## 5. Documentation
-- [ ] `CHANGELOG.md` updated with the new release info.
-- [ ] `AGENTS.md` updated with any architectural changes.
-- [ ] `docs/security/security-audit.md` updated with the latest results.
+## Performance
+
+- [ ] Images use appropriate Next.js optimization.
+- [ ] Metadata is configured.
+- [ ] Public routes render correctly on mobile and desktop.
+
+## Data
+
+- [ ] Database migrations have been reviewed.
+- [ ] Authorization policies are verified.
+- [ ] No real customer or test credentials are included in seed data.
+
+## Documentation
+
+- [ ] README reflects the current architecture.
+- [ ] Public documentation contains no private operational information.
