@@ -2,9 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 const SESSION_COOKIE = 'well_admin_session'
-const SESSION_SECRET =
-  process.env.PGRST_JWT_SECRET ||
-  'super-secret-jwt-token-change-me-in-production'
+const SESSION_SECRET = process.env.PGRST_JWT_SECRET
 
 /**
  * Verifies the simple secure HMAC session token using Web Crypto API
